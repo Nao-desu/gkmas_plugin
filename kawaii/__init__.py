@@ -37,8 +37,7 @@ async def kawaii(bot, ev):
         else:x1,y1 = y*900/506,y
         x2,y2 = 900,506
     image = image.crop((abs(int((x1-x)/2)),abs(int((y1-y)/2)),int((x1+x)/2),int((y1+y)/2)))
-    image.resize((x2,y2),Image.ANTIALIAS)
-    image = image.convert("RGBA")
+    image = image.resize((x2,y2),Image.ANTIALIAS)
     image.paste(image_flame,(0,0),image_flame)
     image.convert("RGB")
     image_bytes = BytesIO()
