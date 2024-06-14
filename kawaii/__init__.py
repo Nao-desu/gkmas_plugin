@@ -28,20 +28,26 @@ async def kawaii(bot, ev):
     x,y = image.size
     if x/y < 1.2:
         image_flame = Image.open(img1)
-        if x/y < 675/900:x1,y1 = x,x/(675/900)
-        else:x1,y1 = y*675/900,y
+        if x/y < 589/814:x1,y1 = x,x/(589/814)
+        else:x1,y1 = y*589/814,y
+        d = 43
         x2,y2 = 675,900
+        x3,y3 = 589,814
     else:
         image_flame = Image.open(img2)
-        if x/y < 900/506:x1,y1 = x,x/(900/506)
-        else:x1,y1 = y*900/506,y
+        if x/y < 808/414:x1,y1 = x,x/(808/414)
+        else:x1,y1 = y*808/414,y
+        d = 46
         x2,y2 = 900,506
+        x3,y3 = 808,414
     image = image.crop((abs(int((x1-x)/2)),abs(int((y1-y)/2)),int((x1+x)/2),int((y1+y)/2)))
-    image = image.resize((x2,y2),Image.ANTIALIAS)
-    image.paste(image_flame,(0,0),image_flame)
-    image = image.convert("RGB")
+    image = image.resize((x3,y3),Image.ANTIALIAS)
+    bg = Image.new('RGBA',(x2,y2),(255,255,255,255))
+    bg.paste(image,(d,d),image)
+    bg.paste(image_flame,(0,0),image_flame)
+    bg = bg.convert("RGB")
     image_bytes = BytesIO()
-    image.save(image_bytes, format='JPEG')
+    bg.save(image_bytes, format='JPEG')
     base64_str = f'base64://{base64.b64encode(image_bytes.getvalue()).decode()}'
     msg = f'[CQ:image,file={base64_str}]'
     await bot.send(ev, msg)
