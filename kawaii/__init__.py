@@ -41,7 +41,7 @@ async def kawaii(bot, ev):
         x2,y2 = 900,506
         x3,y3 = 808,414
     image = image.crop((abs(int((x1-x)/2)),abs(int((y1-y)/2)),int((x1+x)/2),int((y1+y)/2)))
-    image = image.resize((x3,y3),Image.ANTIALIAS)
+    image = image.resize((x3,y3))
     bg = Image.new('RGBA',(x2,y2),(255,255,255,255))
     bg.paste(image,(d,d))
     bg.paste(image_flame,(0,0),image_flame)
