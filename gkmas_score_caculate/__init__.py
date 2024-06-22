@@ -109,7 +109,7 @@ async def gkmas_oiko_caculate(bot,ev):
             state_p = data[1][:-1]
         else:state_p = data[1]
         if not state_p.isdigit():await bot.send(ev,err);return
-        state_p = int(state_p) + 1
+        state_p = int(state_p) + 100
         state_end_1 = state + int(state_p*310/100)
         if state_end_1 > 1500:state_end_1 = 1500
         state_end_2 = state + int(state_p*145/100)
@@ -123,9 +123,7 @@ async def gkmas_oiko_caculate(bot,ev):
         if da_p.endswith('%'):da_p = da_p[:-1]
         if vi_p.endswith('%'):vi_p = vi_p[:-1]
         vo, vo_p, da, da_p, vi, vi_p = map(int, [vo, vo_p, da, da_p, vi, vi_p])
-        vo_p += 1
-        da_p += 1
-        vi_p += 1
+        vo_p += 100;da_p += 100;vi_p += 100
         f1 = lambda x,y:x+int(y*310/100) if x+int(y*310/100)<1500 else 1500
         f2 = lambda x,y:x+int(y*145/100) if x+int(y*145/100)<1500 else 1500
         f3 = lambda x:x+30 if x+30<1500 else 1500
