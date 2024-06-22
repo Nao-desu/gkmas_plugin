@@ -52,7 +52,7 @@ async def gkmas_score_in_caculate(bot,ev):
             if not i.isdigit():await bot.send(ev,'格式错误，应为[逆算分 vo da vi 最终评价分]');return
             data[n] = int(i)
             if int(i)>1500 or int(i)<1:
-                if n <= 3:await bot.send(ev,'属性值不合理，应在1~1500区间内');return
+                if n <= 2:await bot.send(ev,'属性值不合理，应在1~1500区间内');return
             n += 1
     else: await bot.send(ev,'格式错误，应为[逆算分 vo da vi 最终评价分]');return
     vo,da,vi,score_r = data
@@ -77,7 +77,7 @@ async def gkmas_score_ta_caculate(bot,ev):
             if not i.isdigit():await bot.send(ev,'格式错误，应为[算目标分 vo da vi 最终评价分]');return
             data[n] = int(i)
             if int(i)>1500 or int(i)<1:
-                if n <= 3:await bot.send(ev,'属性值不合理，应在1~1500区间内');return
+                if n <= 2:await bot.send(ev,'属性值不合理，应在1~1500区间内');return
             n += 1
     else: await bot.send(ev,'格式错误，应为[算目标分 vo da vi 最终评价分]');return
     vo,da,vi,score_r = data
@@ -111,8 +111,9 @@ async def gkmas_oiko_caculate(bot,ev):
         if not state_p.isdigit():await bot.send(ev,err);return
         state_p = int(state_p)
         state_end_1 = state + int(state_p*310/100)
-        if state_end > 1500:state_end = 1500
+        if state_end_1 > 1500:state_end_1 = 1500
         state_end_2 = state + int(state_p*145/100)
+        if state_end_2 > 1500:state_end_2 = 1500
         await bot.finish(ev,f'主训练→{state_end_1}\n副训练→{state_end_2}');return
     elif len(data) == 6:
         vo,vo_p,da,da_p,vi,vi_p = data
