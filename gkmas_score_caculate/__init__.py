@@ -145,6 +145,6 @@ async def gkmas_oiko_caculate(bot,ev):
         _state = {"vo":_state_end_vo,"da":_state_end_da,"vi":_state_end_vi}
         trt = {"vo":[f1,f2,f2],"da":[f2,f1,f2],"vi":[f2,f2,f1]}
         max_state = max(_state,key=_state.get)
-        msg = f'建议选择{max_state}训练\n训练后面板:{state[max_state]}→{_state[max_state]}\nvo:{vo}→{trt[max_state][0](vo,vo_p)}\nda:{da}→{trt[max_state][1](da,da_p)}\nvi:{vi}→{trt[max_state][2](vi,vi_p)}\n(未考虑s卡加值)'
+        msg = f'建议选择{max_state}训练\n训练后面板:{state[max_state]}→{_state[max_state]}\nvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}\nda:{int(da)}→{trt[max_state][1](da,da_p)}\nvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}\n(未考虑s卡加值)'
         await bot.finish(ev,msg)
     else: await bot.send(ev,err);return
