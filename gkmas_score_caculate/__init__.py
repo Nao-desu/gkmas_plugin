@@ -97,6 +97,14 @@ async def gkmas_score_ta_caculate(bot,ev):
     msg = f'达到目标评价需要在最终试验获得:\n    {score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)\n(仅pro模式适用)'
     await bot.send(ev,msg)
 
+def is_float(self):
+    try:
+        float(self)
+        return True
+    except ValueError:
+        return False
+
+
 @sv.on_prefix('算加练')
 async def gkmas_oiko_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
@@ -108,8 +116,8 @@ async def gkmas_oiko_caculate(bot,ev):
         if data[1].endswith('%'):
             state_p = data[1][:-1]
         else:state_p = data[1]
-        if not state_p.isdigit():await bot.send(ev,err);return
-        state_p = int(state_p) + 100
+        if not is_float(state_p):await bot.send(ev,err);return
+        state_p = float(state_p) + 100
         state_end_1 = state + int(state_p*310/100)
         if state_end_1 > 1500:state_end_1 = 1500
         state_end_2 = state + int(state_p*145/100)
@@ -118,15 +126,15 @@ async def gkmas_oiko_caculate(bot,ev):
     elif len(data) == 6:
         vo,vo_p,da,da_p,vi,vi_p = data
         for i in data:
-            if not i.isdigit() or (i.endswith('%') and not i[:-1].isdigit()):await bot.send(ev,err);return
+            if (i.endswith('%') and not is_float(i[:-1])) or not is_float(i):await bot.send(ev,err);return
         if vo_p.endswith('%'):vo_p = vo_p[:-1]
         if da_p.endswith('%'):da_p = da_p[:-1]
         if vi_p.endswith('%'):vi_p = vi_p[:-1]
-        vo, vo_p, da, da_p, vi, vi_p = map(int, [vo, vo_p, da, da_p, vi, vi_p])
+        vo, vo_p, da, da_p, vi, vi_p = map(float, [vo, vo_p, da, da_p, vi, vi_p])
         vo_p += 100;da_p += 100;vi_p += 100
-        f1 = lambda x,y:x+int(y*310/100) if x+int(y*310/100)<1500 else 1500
-        f2 = lambda x,y:x+int(y*145/100) if x+int(y*145/100)<1500 else 1500
-        f3 = lambda x:x+30 if x+30<1500 else 1500
+        f1 = lambda x,y:int(x)+int(y*310/100) if x+int(y*310/100)<1500 else 1500
+        f2 = lambda x,y:int(x)+int(y*145/100) if x+int(y*145/100)<1500 else 1500
+        f3 = lambda x:int(x+30) if x+30<1500 else 1500
         state_end_vo = f1(vo,vo_p) + f2(da,da_p) + f2(vi,vi_p)
         _state_end_vo = f3(f1(vo,vo_p)) + f3(f2(da,da_p)) + f3(f2(vi,vi_p))
         state_end_da = f2(vo,vo_p) + f1(da,da_p) + f2(vi,vi_p)
