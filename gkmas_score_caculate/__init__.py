@@ -38,11 +38,12 @@ async def gkmas_score_caculate(bot,ev):
     if 1500-vi <=30:flu += vi-1470
     data = [f'您的面板为{state}→{state+90-flu}(+{90-flu})']
     score = 1700 + int((state+90-flu)*2.3)
-    if score < 8200: data.append(f'A评价需要最终试验获得{score_caculate(10000-score)}分  \rA+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分')
-    elif score < 9250: data.append(f'最终试验1位即可达成A评价\nA+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分')
-    elif score < 9700: data.append(f'A+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分')
-    elif score < 11200: data.append(f'最终试验1位即可达成A+评价\nS评价需要最终试验获得{score_caculate(13000-score)}分')
-    else: data.append(f'最终试验1位即可达成S评价')
+    if score < 8200: data.append(f'A评价需要最终试验获得{score_caculate(10000-score)}分  \rA+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
+    elif score < 9250: data.append(f'最终试验1位即可达成A评价\nA+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
+    elif score < 9700: data.append(f'A+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
+    elif score < 11200: data.append(f'最终试验1位即可达成A+评价\nS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
+    else: data.append(f'最终试验1位即可达成S评价  \r')
+    data.append('点击下方按钮继续算分')
     msg = MD_gen1(data,button)
     await bot.send(ev,msg)
 
