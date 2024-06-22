@@ -64,7 +64,7 @@ async def gkmas_score_in_caculate(bot,ev):
     elif diff<1500:rank = 3
     elif diff<1800:rank = 2
     else:rank = 1
-    msg = f'您的面板为{state}\n最终试验取得了:\n    {score_caculate(diff+rank2score[rank])}~{score_caculate(diff+1+rank2score[rank])-1}分({rank}位)\n(pro模式适用)'
+    msg = f'您的面板为{state}\n最终试验取得了:\n    {score_caculate(diff+rank2score[rank-1])}~{score_caculate(diff+1+rank2score[rank-1])-1}分({rank}位)\n(pro模式适用)'
     await bot.send(ev,msg)
 
 @sv.on_prefix('算目标分')
@@ -94,7 +94,7 @@ async def gkmas_score_ta_caculate(bot,ev):
     elif diff<1500:rank = 3
     elif diff<1800:rank = 2
     else:rank = 1
-    msg = f'达到目标评价需要在最终试验获得:\n    {score_caculate(diff+rank2score[rank])}~{score_caculate(diff+1+rank2score[rank])-1}分({rank}位)\n(仅pro模式适用)'
+    msg = f'达到目标评价需要在最终试验获得:\n    {score_caculate(diff+rank2score[rank-1])}~{score_caculate(diff+1+rank2score[rank-1])-1}分({rank}位)\n(仅pro模式适用)'
     await bot.send(ev,msg)
 
 @sv.on_prefix('算加练')
@@ -109,12 +109,12 @@ async def gkmas_oiko_caculate(bot,ev):
             state_p = data[1][:-1]
         else:state_p = data[1]
         if not state_p.isdigit():await bot.send(ev,err);return
-        state_p = int(state_p)
+        state_p = int(state_p) + 1
         state_end_1 = state + int(state_p*310/100)
         if state_end_1 > 1500:state_end_1 = 1500
         state_end_2 = state + int(state_p*145/100)
         if state_end_2 > 1500:state_end_2 = 1500
-        await bot.finish(ev,f'主训练→{state_end_1}\n副训练→{state_end_2}');return
+        await bot.finish(ev,f'\n主训练→{state_end_1}\n副训练→{state_end_2}');return
     elif len(data) == 6:
         vo,vo_p,da,da_p,vi,vi_p = data
         for i in data:
@@ -123,6 +123,9 @@ async def gkmas_oiko_caculate(bot,ev):
         if da_p.endswith('%'):da_p = da_p[:-1]
         if vi_p.endswith('%'):vi_p = vi_p[:-1]
         vo, vo_p, da, da_p, vi, vi_p = map(int, [vo, vo_p, da, da_p, vi, vi_p])
+        vo_p += 1
+        da_p += 1
+        vi_p += 1
         f1 = lambda x,y:x+int(y*310/100) if x+int(y*310/100)<1500 else 1500
         f2 = lambda x,y:x+int(y*145/100) if x+int(y*145/100)<1500 else 1500
         f3 = lambda x:x+30 if x+30<1500 else 1500
