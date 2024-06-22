@@ -64,7 +64,7 @@ async def gkmas_score_in_caculate(bot,ev):
     elif diff<1500:rank = 3
     elif diff<1800:rank = 2
     else:rank = 1
-    msg = f'您的面板为{state}\n最终试验取得了:\n    {score_caculate(diff+rank2score[rank-1])}~{score_caculate(diff+1+rank2score[rank-1])-1}分({rank}位)\n(pro模式适用)'
+    msg = f'您的面板为{state}\n最终试验取得了:\n    {score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)\n(pro模式适用)'
     await bot.send(ev,msg)
 
 @sv.on_prefix('算目标分')
@@ -94,7 +94,7 @@ async def gkmas_score_ta_caculate(bot,ev):
     elif diff<1500:rank = 3
     elif diff<1800:rank = 2
     else:rank = 1
-    msg = f'达到目标评价需要在最终试验获得:\n    {score_caculate(diff+rank2score[rank-1])}~{score_caculate(diff+1+rank2score[rank-1])-1}分({rank}位)\n(仅pro模式适用)'
+    msg = f'达到目标评价需要在最终试验获得:\n    {score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)\n(仅pro模式适用)'
     await bot.send(ev,msg)
 
 @sv.on_prefix('算加练')
