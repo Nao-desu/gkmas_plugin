@@ -139,7 +139,7 @@ async def gkmas_oiko_caculate(bot,ev):
         if state_end_1 > 1500:state_end_1 = 1500
         state_end_2 = state + int(state_p*145/100)
         if state_end_2 > 1500:state_end_2 = 1500
-        data = [f'主训练→{state_end_1}',f'副训练→{state_end_2}','点击下方按钮进行更多计算']
+        data = [f'主训练→{state_end_1}',f'副训练→{state_end_2}  \r','点击下方按钮进行更多计算']
         await bot.finish(ev,MD_gen1(data,button));return
     elif len(data) == 6:
         vo,vo_p,da,da_p,vi,vi_p = data
@@ -166,6 +166,6 @@ async def gkmas_oiko_caculate(bot,ev):
         _state = {"vo":_state_end_vo,"da":_state_end_da,"vi":_state_end_vi}
         trt = {"vo":[f1,f2,f2],"da":[f2,f1,f2],"vi":[f2,f2,f1]}
         max_state = max(_state,key=_state.get)
-        data = [f'建议选择{max_state}训练',f'训练后面板:{state[max_state]}→{_state[max_state]}  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}',f'未考虑s卡课后加值']
+        data = [f'建议选择{max_state}训练',f'训练后面板:{state[max_state]}→{_state[max_state]}  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
         await bot.finish(ev,MD_gen1(data,button))
     else: await bot.send(ev,err);return
