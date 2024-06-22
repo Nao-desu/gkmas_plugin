@@ -43,8 +43,35 @@ async def gkmas_score_caculate(bot,ev):
     elif score < 9700: data.append(f'A+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
     elif score < 11200: data.append(f'最终试验1位即可达成A+评价  \rS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
     else: data.append(f'最终试验1位即可达成S评价  \r')
-    data.append('点击下方按钮继续算分')
+    data.append('旧版qq不想更新的，使用[o算分]命令(原命令前加字母o)，可以输出旧版结果')
     msg = MD_gen1(data,button)
+    await bot.send(ev,msg)
+
+@sv.on_prefix('o算分','o查分')
+async def gkmas_score_caculate(bot,ev):
+    texts:str = ev.message.extract_plain_text().strip()
+    data = texts.split(' ')
+    if len(data) == 3:
+        n = 0
+        for i in data:
+            if not i.isdigit():await bot.send(ev,'格式错误，应为[算分 vo da vi]');return
+            data[n] = int(i)
+            if int(i)>1500 or int(i)<1:await bot.send(ev,'属性值不合理，应在1~1500区间内');return
+            n += 1
+    else: await bot.send(ev,'格式错误，应为[算分 vo da vi]');return
+    vo,da,vi = data
+    state = vo+da+vi
+    flu = 0
+    if 1500-vo <=30:flu += vo-1470
+    if 1500-da <=30:flu += da-1470
+    if 1500-vi <=30:flu += vi-1470
+    msg = f'您的面板为{state}→{state+90-flu}(+{90-flu})\n'
+    score = 1700 + int((state+90-flu)*2.3)
+    if score < 8200:msg += f'A评价需要最终试验获得{score_caculate(10000-score)}分\nA+评价需要最终试验获得{score_caculate(11500-score)}分\nS评价需要最终试验获得{score_caculate(13000-score)}分'
+    elif score < 9250:msg += f'最终试验1位即可达成A评价\nA+评价需要最终试验获得{score_caculate(11500-score)}分\nS评价需要最终试验获得{score_caculate(13000-score)}分'
+    elif score < 9700:msg += f'A+评价需要最终试验获得{score_caculate(11500-score)}分\nS评价需要最终试验获得{score_caculate(13000-score)}分'
+    elif score < 11200:msg += f'最终试验1位即可达成A+评价\nS评价需要最终试验获得{score_caculate(13000-score)}分'
+    else:msg += f'最终试验1位即可达成S评价'
     await bot.send(ev,msg)
 
 #以下假设第一名为7000分(1800)，第二名为5000分(1500)，第三名为2500(750)分
