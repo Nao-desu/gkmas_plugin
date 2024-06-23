@@ -174,7 +174,7 @@ async def gkmas_score_ta_caculate(bot,ev):
                 break
         if not result_regular:
             result_regular.append(regular_result[4])
-    elif not result_regular:
+    if not result_regular:
         if len(result_pro) == 1:
             result = result_pro[0]
             if result[0]!=1:
@@ -197,7 +197,7 @@ async def gkmas_score_ta_caculate(bot,ev):
             await bot.send(ev,MD_gen1(data,button))
         else:return
     else:
-        data = ['返回了多条结果','','']
+        data = ['计算结果(pro&regular模式)','','']
         result = result_pro[0]
         if result[0]!=1:
             rank = result[0]
