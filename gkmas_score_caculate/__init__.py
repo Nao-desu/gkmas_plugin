@@ -21,7 +21,7 @@ button = [
 @sv.on_prefix('算分','查分')
 async def gkmas_score_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ').remove('')[:3]
+    data = texts.split(' ')[:3]
     if len(data) == 3:
         n = 0
         for i in data:
@@ -50,7 +50,7 @@ async def gkmas_score_caculate(bot,ev):
 @sv.on_prefix('o算分','o查分')
 async def gkmas_score_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ').remove('')[:3]
+    data = texts.split(' ')[:3]
     if len(data) == 3:
         n = 0
         for i in data:
@@ -81,7 +81,7 @@ rank2score = {1:1700,2:900,3:500,4:0}
 @sv.on_prefix('逆算分')
 async def gkmas_score_in_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ').remove('')[:4]
+    data = texts.split(' ')[:4]
     if len(data) == 4:
         n = 0
         for i in data:
@@ -139,7 +139,7 @@ str_score = {
 @sv.on_prefix('算目标分')
 async def gkmas_score_ta_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ').remove('')[:4]
+    data = texts.split(' ')[:4]
     if len(data) == 4:
         n = 0
         for i in data:
@@ -216,7 +216,7 @@ def is_float(self):
 @sv.on_prefix('算加练')
 async def gkmas_oiko_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ').remove('')[:6]
+    data = texts.split(' ')[:6]
     err = """格式错误，正确格式应为
 三属性计算：[算加练 vo vo% da da% vi vi%]
 单属性计算：[算加练 某一属性 该属性加成%]
