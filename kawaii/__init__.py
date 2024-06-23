@@ -55,6 +55,7 @@ async def kawaii(bot, ev):
     image_data = await get_pic(ev)
     image = Image.open(image_data)
     frames = []
+    durations = []
 
     if image.format == 'GIF' and hasattr(image, 'n_frames'):
         for frame in range(0, image.n_frames):
@@ -62,18 +63,19 @@ async def kawaii(bot, ev):
             frame_image = image.copy()
             frame_image = process_frame(frame_image)
             frames.append(frame_image)
+            durations.append(image.info['duration'] if 'duration' in image.info else 100)
     else:
         processed_image = process_frame(image)
         frames.append(processed_image)
 
+    output_image = BytesIO()
     if len(frames) > 1:
-        output_image = BytesIO()
-        frames[0].save(output_image, format='GIF', save_all=True, append_images=frames[1:], loop=0)
+        frames[0].save(output_image, format='GIF', save_all=True, append_images=frames[1:], loop=0, duration=durations)
     else:
-        output_image = BytesIO()
         frames[0].save(output_image, format='JPEG')
 
     base64_str = f'base64://{base64.b64encode(output_image.getvalue()).decode()}'
     msg = f'[CQ:image,file={base64_str}]'
     await bot.send(ev, msg)
+
 
