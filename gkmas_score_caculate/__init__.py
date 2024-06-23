@@ -164,12 +164,16 @@ async def gkmas_score_ta_caculate(bot,ev):
         if pro_result[rank][1] > pro_rank_score[rank]:
             result_pro.append(pro_result[rank])
             break
+    if not result_pro:
+        result_pro.append(pro_result[4])
     if score_r < 10000:
         regular_result = {rank:score_by_rank(rank,vo,da,vi,score_r) for rank in range(1,5)}
         for rank in range(1,5):
             if regular_result[rank][1] > regular_rank_score[rank]:
                 result_regular.append(regular_result[rank])
                 break
+        if not result_regular:
+            result_regular.append(regular_result[4])
     elif not result_regular:
         if len(result_pro) == 1:
             result = result_pro[0]
