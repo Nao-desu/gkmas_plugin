@@ -151,8 +151,8 @@ async def gkmas_score_ta_caculate(bot,ev):
             else:score_r = int(i)
             if n <= 2:
                 data[n] = int(i)
-            if int(i)>1500 or int(i)<1:
-                if n <= 2:await bot.send(ev,f'你输入的第{n+1}个属性值不在1~1500区间内');return
+                if int(i)>1500 or int(i)<1:
+                    await bot.send(ev,f'你输入的第{n+1}个属性值不在1~1500区间内');return
             n += 1
     else: await bot.send(ev,'格式错误，应为[算目标分 vo da vi 目标评价分]');return
     vo,da,vi = data[:3]
@@ -161,48 +161,57 @@ async def gkmas_score_ta_caculate(bot,ev):
     result_pro = []
     result_regular = []
     for rank in range(1,5):
-        if rank == 1:
-            if pro_result[rank][1] > pro_rank_score[rank]:
-                result_pro.append(pro_result[rank])
-        elif pro_result[rank][1] in range(pro_rank_score[rank-1],pro_rank_score[rank]):
+        if pro_result[rank][1] > pro_rank_score[rank]:
             result_pro.append(pro_result[rank])
+            break
     if score_r < 10000:
         regular_result = {rank:score_by_rank(rank,vo,da,vi,score_r) for rank in range(1,5)}
         for rank in range(1,5):
-            if rank == 1:
-                if regular_result[rank][1] > regular_rank_score[rank]:
-                    result_regular.append(regular_result[rank])
-            elif regular_result[rank][1] in range(regular_rank_score[rank-1],regular_rank_score[rank]):
+            if regular_result[rank][1] > regular_rank_score[rank]:
                 result_regular.append(regular_result[rank])
-    if not result_pro and not result_regular:
+                break
         await bot.finish(ev,'目标评价分不合理,可能是目标太低了？')
     elif not result_regular:
         if len(result_pro) == 1:
             result = result_pro[0]
+            if result[0]!=1:
+                rank = result[0]
+                if pro_rank_score[rank-1] < result[1]:
+                    data = [f'您的预计面板为{result[3]}→{result[4]}',f'达到目标评价以上需要在最终试验取得{rank-1}位(预计{pro_rank_score[rank-1]}分)  \r',f'仅pro模式适用,注意：你无法精确获得此评价分']
+                    await bot.finish(ev,MD_gen1(data,button))
             data = [f'您的预计面板为{result[3]}→{result[4]}',f'达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分({result[0]}位)  \r',f'仅pro模式适用']
             await bot.send(ev,MD_gen1(data,button))
-        else:
-            data = ['返回了多条结果...','','']
-            for i in result_pro:
-                data[1] +=  f'您的预计面板为{i[3]}→{i[4]}({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
-            data[2] = '仅pro模式适用'
-            await bot.send(ev,MD_gen1(data,button))
+        else:return
     elif not result_pro:
         if len(result_regular) == 1:
             result = result_regular[0]
-            data = [f'您的预计面板为{result[3]}→{result[4]}',f'达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分({result[0]}位)  \r',f'仅regular模式适用']
+            if result[0]!=1:
+                rank = result[0]
+                if regular_rank_score[rank-1] < result[1]:
+                    data = [f'您的预计面板为{result[3]}→{result[4]}',f'达到目标评价以上需要在最终试验取得{rank-1}位(预计{regular_rank_score[rank-1]}分)  \r',f'仅regular模式适用,注意：你无法精确获得此评价分']
+                    await bot.finish(ev,MD_gen1(data,button))
+            data = [f'您的预计面板为{result[3]}→{result[4]}',f'达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分({result[0]}位)  \r',f'仅regular模式适用,如果你是pro模式,说明你的目标评价太低了']
             await bot.send(ev,MD_gen1(data,button))
-        else:
-            data = ['返回了多条结果...','','']
-            for i in result_regular:
-                data[1] +=  f'您的预计面板为{i[3]}→{i[4]}({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
-            data[2] = '仅regular模式适用'
-            await bot.send(ev,MD_gen1(data,button))
+        else:return
     else:
         data = ['返回了多条结果','','']
-        for i in result_pro:
+        result = result_pro[0]
+        if result[0]!=1:
+            rank = result[0]
+            if pro_rank_score[rank-1] < result[1]:
+                data[1] += f'您的预计面板为{result[3]}→{result[4]}(pro模式)({rank-1}位)  \r    达到目标评价以上需要在最终试验取得{rank-1}位(预计{pro_rank_score[rank-1]}分)  \r注意：你无法精确获得此评价分  \r'
+            else:
+                data[1] +=  f'您的预计面板为{i[3]}→{i[4]}(pro模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+        else:
             data[1] +=  f'您的预计面板为{i[3]}→{i[4]}(pro模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
-        for i in result_regular:
+        result = result_regular[0]
+        if result[0]!=1:
+            rank = result[0]
+            if regular_rank_score[rank-1] < result[1]:
+                data[2] += f'您的预计面板为{result[3]}→{result[4]}(regular模式)({rank-1}位)  \r    达到目标评价以上需要在最终试验取得{rank-1}位(预计{regular_rank_score[rank-1]}分)  \r注意：你无法精确获得此评价分  \r'
+            else:
+                data[2] +=  f'您的预计面板为{i[3]}→{i[4]}(regular模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+        else:
             data[2] +=  f'您的预计面板为{i[3]}→{i[4]}(regular模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
         await bot.send(ev,MD_gen1(data,button))
 
