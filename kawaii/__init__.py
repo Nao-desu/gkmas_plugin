@@ -54,11 +54,17 @@ def process_frame(frame_image):
 async def kawaii(bot, ev):
     image_data = await get_pic(ev)
     image = Image.open(image_data)
+    
+    # 检查并压缩图片或GIF
+    max_size = 1 * 1024 * 1024  # 1MB
+    image_data = compress_image(image_data, image, max_size)
+    image = Image.open(image_data)
+    
     frames = []
     durations = []
 
     if image.format == 'GIF' and hasattr(image, 'n_frames'):
-        for frame in range(0, image.n_frames):
+        for frame in range(image.n_frames):
             image.seek(frame)
             frame_image = image.copy()
             frame_image = process_frame(frame_image)
@@ -77,5 +83,20 @@ async def kawaii(bot, ev):
     base64_str = f'base64://{base64.b64encode(output_image.getvalue()).decode()}'
     msg = f'[CQ:image,file={base64_str}]'
     await bot.send(ev, msg)
+
+def compress_image(image_data, image, max_size):
+    """
+    压缩图片，使其大小小于指定的大小（单位：字节）
+    """
+    quality = 85
+    while len(image_data.getvalue()) > max_size:
+        output_image = BytesIO()
+        image.save(output_image, format='JPEG', quality=quality)
+        if quality <= 5:
+            break
+        quality -= 5
+        image_data = BytesIO(output_image.getvalue())
+    return image_data
+
 
 
