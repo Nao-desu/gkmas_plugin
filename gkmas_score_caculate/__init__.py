@@ -170,7 +170,6 @@ async def gkmas_score_ta_caculate(bot,ev):
             if regular_result[rank][1] > regular_rank_score[rank]:
                 result_regular.append(regular_result[rank])
                 break
-        await bot.finish(ev,'目标评价分不合理,可能是目标太低了？')
     elif not result_regular:
         if len(result_pro) == 1:
             result = result_pro[0]
