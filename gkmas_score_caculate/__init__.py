@@ -21,7 +21,7 @@ button = [
 @sv.on_prefix('算分','查分')
 async def gkmas_score_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ')
+    data = texts.split(' ').remove('')[:3]
     if len(data) == 3:
         n = 0
         for i in data:
@@ -43,14 +43,14 @@ async def gkmas_score_caculate(bot,ev):
     elif score < 9700: data.append(f'A+评价需要最终试验获得{score_caculate(11500-score)}分  \rS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
     elif score < 11200: data.append(f'最终试验1位即可达成A+评价  \rS评价需要最终试验获得{score_caculate(13000-score)}分  \r')
     else: data.append(f'最终试验1位即可达成S评价  \r')
-    data.append('旧版qq不想更新的，使用[o算分]命令(原命令前加字母o)，可以输出旧版结果')
+    data.append('如果不想更新旧版qq，可以使用[o算分]命令(原命令前加字母o)，可以输出旧版结果')
     msg = MD_gen1(data,button)
     await bot.send(ev,msg)
 
 @sv.on_prefix('o算分','o查分')
 async def gkmas_score_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ')
+    data = texts.split(' ').remove('')[:3]
     if len(data) == 3:
         n = 0
         for i in data:
@@ -74,70 +74,136 @@ async def gkmas_score_caculate(bot,ev):
     else:msg += f'最终试验1位即可达成S评价'
     await bot.send(ev,msg)
 
-#以下假设第一名为7000分(1800)，第二名为5000分(1500)，第三名为2500(750)分
-
+#以下假设第一名为7000分(1800)，第二名为5000分(1500)，第三名为2500分(750)
+#初：第一名2600分(780)，第二名1600分(480)，第三名800分(240)
 rank2score = {1:1700,2:900,3:500,4:0}
 
 @sv.on_prefix('逆算分')
 async def gkmas_score_in_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ')
+    data = texts.split(' ').remove('')[:4]
     if len(data) == 4:
         n = 0
         for i in data:
-            if not i.isdigit():await bot.send(ev,'格式错误，应为[逆算分 vo da vi 最终评价分]');return
+            if not i.isdigit():await bot.send(ev,f'你输入的第{n+1}个参数不是数字');return
             data[n] = int(i)
             if int(i)>1500 or int(i)<1:
-                if n <= 2:await bot.send(ev,'属性值不合理，应在1~1500区间内');return
+                if n <= 2:await bot.send(ev,f'你输入的第{n+1}个属性值不在1~1500区间内');return
             n += 1
-    else: await bot.send(ev,'格式错误，应为[逆算分 vo da vi 最终评价分]');return
+    else: await bot.send(ev,'格式错误，应为[逆算分 vo da vi 最终评价分](无需中括号)');return
     vo,da,vi,score_r = data
     state = vo+da+vi
     score = int(state*2.3)
     diff = score_r - score
     if diff < 0:await bot.send(ev,'最终评价分不合理');return
     elif diff< 750:rank = 4
-    elif diff<1500:rank = 3
-    elif diff<1800:rank = 2
+    elif diff<1500+900:rank = 3
+    elif diff<1800+1700:rank = 2
     else:rank = 1
-    data = [f'您的面板为{state}',f'最终试验取得了:  \r{score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)  \r','仅pro模式适用']
+    if score_r < 10000:
+        if diff < 240:rank0 =4
+        elif diff<480+500:rank0 = 3
+        elif diff<780+1700:rank0 = 2
+        else:rank0 = 1
+        data = [f'您的面板为{state}',f'最终试验取得了:  \r{score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)(pro模式)  \r',f'{score_caculate(diff-rank2score[rank0])}~{score_caculate(diff+1-rank2score[rank0])-1}分({rank0}位)(regular模式)']
+    else:
+        data = [f'您的面板为{state}',f'最终试验取得了:  \r{score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)  \r','仅pro模式适用']
     msg = MD_gen1(data,button)
     await bot.send(ev,msg)
+
+pro_rank_score = {1:7000,2:5000,3:2500,4:0}
+regular_rank_score = {1:2600,2:1600,3:800,4:0}
+
+def score_by_rank(rank,vo,da,vi,score_r):
+    ex = {1:30,2:20,3:10,4:0}
+    ex = ex[rank]
+    flu = 0
+    if 1500-vo <=ex:flu += vo-(1500-ex)
+    if 1500-da <=ex:flu += da-(1500-ex)
+    if 1500-vi <=ex:flu += vi-(1500-ex)
+    state = vo+da+vi
+    state_end = state+ex*3-flu
+    score = int(state*2.3)
+    diff = score_r - score
+    return rank,score_caculate(diff-rank2score[rank]),score_caculate(diff+1-rank2score[rank])-1,state,state_end
+
+str_score = {
+    'b':6000,
+    'b+':8000,
+    'a':10000,
+    'a+':11500,
+    's':13000,
+    's+':14500
+}
 
 @sv.on_prefix('算目标分')
 async def gkmas_score_ta_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ')
+    data = texts.split(' ').remove('')[:4]
     if len(data) == 4:
         n = 0
         for i in data:
-            if not i.isdigit():await bot.send(ev,'格式错误，应为[算目标分 vo da vi 最终评价分]');return
+            if not i.isdigit()and n<=2:await bot.send(ev,f'你输入的第{n+1}个参数不是数字');return
+            if n == 3 and not i.isdigit():
+                if i.lower() not in ['b','b+','a','a+','s','s+']:await bot.send(ev,f'你输入的目标评价分不是数字或B/B+/A/A+/S/S+');return
+                else:
+                    score_r = str_score[i.lower()]
+            else:score_r = int(i)
             data[n] = int(i)
             if int(i)>1500 or int(i)<1:
-                if n <= 2:await bot.send(ev,'属性值不合理，应在1~1500区间内');return
+                if n <= 2:await bot.send(ev,f'你输入的第{n+1}个属性值不在1~1500区间内');return
             n += 1
-    else: await bot.send(ev,'格式错误，应为[算目标分 vo da vi 最终评价分]');return
-    vo,da,vi,score_r = data
-    state = vo+da+vi
-    flu = 0
-    if 1500-vo <=30:flu += vo-1470
-    if 1500-da <=30:flu += da-1470
-    if 1500-vi <=30:flu += vi-1470
-    data = [f'您的面板为{state}→{state+90-flu}(+{90-flu})']
-    score = int((state+90-flu)*2.3)
-    diff = score_r - score
-    if diff < 0:
-        data.append('已达到目标评价！  \r')
-        data.append('仅pro模式适用')
+    else: await bot.send(ev,'格式错误，应为[算目标分 vo da vi 目标评价分]');return
+    vo,da,vi = data[:3]
+    #把所有排位结果计算出来
+    pro_result = {rank:score_by_rank(rank,vo,da,vi,score_r) for rank in range(1,5)}
+    result_pro = []
+    result_regular = []
+    for rank in range(1,5):
+        if rank == 1:
+            if pro_result[rank][1] > pro_rank_score[rank]:
+                result_pro.append(pro_result[rank])
+        elif pro_result[rank][1] in range(pro_rank_score[rank-1],pro_rank_score[rank]):
+            result_pro.append(pro_result[rank])
+    if score_r < 10000:
+        regular_result = {rank:score_by_rank(rank,vo,da,vi,score_r) for rank in range(1,5)}
+        for rank in range(1,5):
+            if rank == 1:
+                if regular_result[rank][1] > regular_rank_score[rank]:
+                    result_regular.append(regular_result[rank])
+            elif regular_result[rank][1] in range(regular_rank_score[rank-1],regular_rank_score[rank]):
+                result_regular.append(regular_result[rank])
+    if not result_pro and not result_regular:
+        await bot.finish(ev,'目标评价分不合理,可能是目标太低了？')
+    elif not result_regular:
+        if len(result_pro) == 1:
+            result = result_pro[0]
+            data = [f'您的预计面板为{result[3]}→{result[4]}',f'达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分({result[0]}位)  \r',f'仅pro模式适用']
+            await bot.send(ev,MD_gen1(data,button))
+        else:
+            data = ['返回了多条结果...','','']
+            for i in result_pro:
+                data[1] +=  f'您的预计面板为{i[3]}→{i[4]}({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+            data[2] = '仅pro模式适用'
+            await bot.send(ev,MD_gen1(data,button))
+    elif not result_pro:
+        if len(result_regular) == 1:
+            result = result_regular[0]
+            data = [f'您的预计面板为{result[3]}→{result[4]}',f'达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分({result[0]}位)  \r',f'仅regular模式适用']
+            await bot.send(ev,MD_gen1(data,button))
+        else:
+            data = ['返回了多条结果...','','']
+            for i in result_regular:
+                data[1] +=  f'您的预计面板为{i[3]}→{i[4]}({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+            data[2] = '仅regular模式适用'
+            await bot.send(ev,MD_gen1(data,button))
+    else:
+        data = ['返回了多条结果','','']
+        for i in result_pro:
+            data[1] +=  f'您的预计面板为{i[3]}→{i[4]}(pro模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+        for i in result_regular:
+            data[2] +=  f'您的预计面板为{i[3]}→{i[4]}(regular模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
         await bot.send(ev,MD_gen1(data,button))
-        return
-    elif diff< 750:rank = 4
-    elif diff<1500:rank = 3
-    elif diff<1800:rank = 2
-    else:rank = 1
-    data.append(f'达到目标评价需要在最终试验获得:  \r{score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)  \r')
-    data.append('仅pro模式适用')
-    await bot.send(ev,MD_gen1(data,button))
 
 def is_float(self):
     try:
@@ -150,8 +216,11 @@ def is_float(self):
 @sv.on_prefix('算加练')
 async def gkmas_oiko_caculate(bot,ev):
     texts:str = ev.message.extract_plain_text().strip()
-    data = texts.split(' ')
-    err = '格式错误，应为[算加练 vo vo% da da% vi vi%]\n或[算加练 某一属性 该属性加成%](百分号可省略)'
+    data = texts.split(' ').remove('')[:6]
+    err = """格式错误，正确格式应为
+三属性计算：[算加练 vo vo% da da% vi vi%]
+单属性计算：[算加练 某一属性 该属性加成%]
+无需中括号，百分号可省略"""
     if len(data) == 2:
         if not data[0].isdigit():await bot.send(ev,err);return
         state = int(data[0])
@@ -166,7 +235,7 @@ async def gkmas_oiko_caculate(bot,ev):
         if state_end_1 > 1500:state_end_1 = 1500
         state_end_2 = state + int(state_p*145/100)
         if state_end_2 > 1500:state_end_2 = 1500
-        data = [f'主训练→{state_end_1}',f'副训练→{state_end_2}  \r','点击下方按钮进行更多计算']
+        data = [f'主训练→{state_end_1}',f'副训练→{state_end_2}  \r','未考虑s卡课后加值']
         await bot.finish(ev,MD_gen1(data,button));return
     elif len(data) == 6:
         vo,vo_p,da,da_p,vi,vi_p = data
