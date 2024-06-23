@@ -123,7 +123,7 @@ def score_by_rank(rank,vo,da,vi,score_r):
     if 1500-vi <=ex:flu += vi-(1500-ex)
     state = vo+da+vi
     state_end = state+ex*3-flu
-    score = int(state*2.3)
+    score = int(state_end*2.3)
     diff = score_r - score
     return rank,score_caculate(diff-rank2score[rank]),score_caculate(diff+1-rank2score[rank])-1,state,state_end
 
@@ -149,7 +149,8 @@ async def gkmas_score_ta_caculate(bot,ev):
                 else:
                     score_r = str_score[i.lower()]
             else:score_r = int(i)
-            data[n] = int(i)
+            if n <= 2:
+                data[n] = int(i)
             if int(i)>1500 or int(i)<1:
                 if n <= 2:await bot.send(ev,f'你输入的第{n+1}个属性值不在1~1500区间内');return
             n += 1
