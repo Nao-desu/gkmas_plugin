@@ -21,33 +21,59 @@ path = os.path.dirname(__file__)
 img1 = os.path.join(path, "kwy1.png")
 img2 = os.path.join(path, "kwy2.png")
 
-@sv.on_prefix("卡哇伊")
-async def kawaii(bot, ev):
-    image = await get_pic(ev)
-    image = Image.open(image)
-    x,y = image.size
-    if x/y < 1.2:
+def process_frame(frame_image):
+    x, y = frame_image.size
+    if x / y < 1.2:
         image_flame = Image.open(img1)
-        if x/y < 589/814:x1,y1 = x,x/(589/814)
-        else:x1,y1 = y*589/814,y
+        if x / y < 589 / 814:
+            x1, y1 = x, x / (589 / 814)
+        else:
+            x1, y1 = y * 589 / 814, y
         d = 43
-        x2,y2 = 675,900
-        x3,y3 = 589,814
+        x2, y2 = 675, 900
+        x3, y3 = 589, 814
     else:
         image_flame = Image.open(img2)
-        if x/y < 808/414:x1,y1 = x,x/(808/414)
-        else:x1,y1 = y*808/414,y
+        if x / y < 808 / 414:
+            x1, y1 = x, x / (808 / 414)
+        else:
+            x1, y1 = y * 808 / 414, y
         d = 46
-        x2,y2 = 900,506
-        x3,y3 = 808,414
-    image = image.crop((abs(int((x1-x)/2)),abs(int((y1-y)/2)),int((x1+x)/2),int((y1+y)/2)))
-    image = image.resize((x3,y3))
-    bg = Image.new('RGBA',(x2,y2),(255,255,255,255))
-    bg.paste(image,(d,d))
-    bg.paste(image_flame,(0,0),image_flame)
-    bg = bg.convert("RGB")
-    image_bytes = BytesIO()
-    bg.save(image_bytes, format='JPEG')
-    base64_str = f'base64://{base64.b64encode(image_bytes.getvalue()).decode()}'
+        x2, y2 = 900, 506
+        x3, y3 = 808, 414
+
+    frame_image = frame_image.crop((abs(int((x1 - x) / 2)), abs(int((y1 - y) / 2)), int((x1 + x) / 2), int((y1 + y) / 2)))
+    frame_image = frame_image.resize((x3, y3))
+    bg = Image.new('RGBA', (x2, y2), (255, 255, 255, 255))
+    bg.paste(frame_image, (d, d))
+    bg.paste(image_flame, (0, 0), image_flame)
+    return bg.convert("RGB")
+
+
+@sv.on_prefix("卡哇伊")
+async def kawaii(bot, ev):
+    image_data = await get_pic(ev)
+    image = Image.open(image_data)
+    frames = []
+
+    if image.format == 'GIF' and hasattr(image, 'n_frames'):
+        for frame in range(0, image.n_frames):
+            image.seek(frame)
+            frame_image = image.copy()
+            frame_image = process_frame(frame_image)
+            frames.append(frame_image)
+    else:
+        processed_image = process_frame(image)
+        frames.append(processed_image)
+
+    if len(frames) > 1:
+        output_image = BytesIO()
+        frames[0].save(output_image, format='GIF', save_all=True, append_images=frames[1:], loop=0)
+    else:
+        output_image = BytesIO()
+        frames[0].save(output_image, format='JPEG')
+
+    base64_str = f'base64://{base64.b64encode(output_image.getvalue()).decode()}'
     msg = f'[CQ:image,file={base64_str}]'
     await bot.send(ev, msg)
+
