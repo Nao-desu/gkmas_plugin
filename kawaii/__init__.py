@@ -88,15 +88,37 @@ def compress_image(image_data, image, max_size):
     """
     压缩图片，使其大小小于指定的大小（单位：字节）
     """
-    quality = 85
-    while len(image_data.getvalue()) > max_size:
-        output_image = BytesIO()
-        image.save(output_image, format='JPEG', quality=quality)
-        if quality <= 5:
-            break
-        quality -= 5
-        image_data = BytesIO(output_image.getvalue())
+    if image.format == 'GIF':
+        # 对GIF图片进行压缩
+        frames = []
+        durations = []
+        for frame in range(image.n_frames):
+            image.seek(frame)
+            frame_image = image.copy()
+            frames.append(frame_image)
+            durations.append(image.info['duration'] if 'duration' in image.info else 100)
+
+        quality = 85
+        while len(image_data.getvalue()) > max_size:
+            output_image = BytesIO()
+            frames[0].save(output_image, format='GIF', save_all=True, append_images=frames[1:], loop=0, duration=durations)
+            if quality <= 5:
+                break
+            quality -= 5
+            image_data = BytesIO(output_image.getvalue())
+    else:
+        # 对非GIF图片进行压缩
+        quality = 85
+        while len(image_data.getvalue()) > max_size:
+            output_image = BytesIO()
+            image.save(output_image, format='JPEG', quality=quality)
+            if quality <= 5:
+                break
+            quality -= 5
+            image_data = BytesIO(output_image.getvalue())
+    
     return image_data
+
 
 
 
