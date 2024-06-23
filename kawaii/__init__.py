@@ -55,7 +55,7 @@ def process_frame(frame_image):
 @sv.on_prefix("卡哇伊")
 async def kawaii(bot, ev):
     image_data = await get_pic(ev)
-    if image_data.tell() >= 1024 * 1024:
+    if len(image_data.getvalue()) >= 1024 * 1024:
         await bot.send(ev, "传入图片过大，可能无法输出结果")
     image = Image.open(image_data)
     frames = []
@@ -65,6 +65,7 @@ async def kawaii(bot, ev):
         for frame in range(image.n_frames):
             image.seek(frame)
             frame_image = image.copy()
+            frame_image = process_frame(frame_image)
             frames.append(frame_image)
             durations.append(image.info['duration'] if 'duration' in image.info else 100)
     else:
