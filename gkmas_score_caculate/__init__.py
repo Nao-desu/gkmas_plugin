@@ -205,18 +205,18 @@ async def gkmas_score_ta_caculate(bot,ev):
             if pro_rank_score[rank-1] < result[1]:
                 data[1] += f'您的预计面板为{result[3]}→{result[4]}(pro模式)({rank-1}位)  \r    达到目标评价以上需要在最终试验取得{rank-1}位(预计{pro_rank_score[rank-1]}分)  \r注意：你无法精确获得此评价分  \r'
             else:
-                data[1] +=  f'您的预计面板为{i[3]}→{i[4]}(pro模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+                data[1] +=  f'您的预计面板为{result[3]}→{result[4]}(pro模式)({result[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分  \r'
         else:
-            data[1] +=  f'您的预计面板为{i[3]}→{i[4]}(pro模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+            data[1] +=  f'您的预计面板为{result[3]}→{result[4]}(pro模式)({result[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分  \r'
         result = result_regular[0]
         if result[0]!=1:
             rank = result[0]
             if regular_rank_score[rank-1] < result[1]:
                 data[2] += f'您的预计面板为{result[3]}→{result[4]}(regular模式)({rank-1}位)  \r    达到目标评价以上需要在最终试验取得{rank-1}位(预计{regular_rank_score[rank-1]}分)  \r注意：你无法精确获得此评价分  \r'
             else:
-                data[2] +=  f'您的预计面板为{i[3]}→{i[4]}(regular模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+                data[2] +=  f'您的预计面板为{result[3]}→{result[4]}(regular模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分  \r'
         else:
-            data[2] +=  f'您的预计面板为{i[3]}→{i[4]}(regular模式)({i[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{i[1]}~{i[2]}分  \r'
+            data[2] +=  f'您的预计面板为{result[3]}→{result[4]}(regular模式)({result[0]}位)  \r    达到目标评价需要在最终试验获得:  \r{result[1]}~{result[2]}分  \r'
         await bot.send(ev,MD_gen1(data,button))
 
 def is_float(self):
