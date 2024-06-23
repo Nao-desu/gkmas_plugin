@@ -55,13 +55,9 @@ def process_frame(frame_image):
 @sv.on_prefix("卡哇伊")
 async def kawaii(bot, ev):
     image_data = await get_pic(ev)
+    if image_data.tell() >= 1024 * 1024:
+        await bot.send(ev, "传入图片过大，可能无法输出结果")
     image = Image.open(image_data)
-    
-    # 检查并压缩图片或GIF
-    max_size = 1 * 1024 * 1024  # 1MB
-    image_data = compress_image(image_data, image, max_size)
-    image = Image.open(image_data)
-    
     frames = []
     durations = []
 
@@ -69,7 +65,6 @@ async def kawaii(bot, ev):
         for frame in range(image.n_frames):
             image.seek(frame)
             frame_image = image.copy()
-            frame_image = process_frame(frame_image)
             frames.append(frame_image)
             durations.append(image.info['duration'] if 'duration' in image.info else 100)
     else:
@@ -85,60 +80,6 @@ async def kawaii(bot, ev):
     base64_str = f'base64://{base64.b64encode(output_image.getvalue()).decode()}'
     msg = f'[CQ:image,file={base64_str}]'
     await bot.send(ev, msg)
-
-def compress_image(image_data, image, max_size):
-    """
-    压缩图片，使其大小小于指定的大小（单位：字节）
-    """
-    if image.format == 'GIF':
-        # 对GIF图片进行压缩
-        gif_frames = []
-        durations = []
-
-        # 读取GIF的每一帧并压缩
-        for frame in ImageSequence.Iterator(image):
-            frame_data = BytesIO()
-            frame.save(frame_data, format="PNG")
-            np_frame = np.frombuffer(frame_data.getvalue(), np.uint8)
-            frame_img = cv2.imdecode(np_frame, cv2.IMREAD_UNCHANGED)
-
-            quality = 90
-            while True:
-                encode_param = [int(cv2.IMWRITE_PNG_COMPRESSION), quality]
-                result, encimg = cv2.imencode('.png', frame_img, encode_param)
-                if not result or encimg.nbytes <= max_size:
-                    break
-                quality += 1
-
-            compressed_frame = Image.open(BytesIO(encimg.tobytes()))
-            gif_frames.append(compressed_frame)
-            durations.append(frame.info['duration'] if 'duration' in frame.info else 100)
-
-        # 创建新的GIF
-        output_image = BytesIO()
-        gif_frames[0].save(output_image, format='GIF', save_all=True, append_images=gif_frames[1:], loop=0, duration=durations)
-
-        return output_image
-
-    else:
-        # 对非GIF图片进行压缩
-        np_img = np.frombuffer(image_data.getvalue(), np.uint8)
-        img = cv2.imdecode(np_img, cv2.IMREAD_UNCHANGED)
-
-        quality = 90
-        while image_data.getbuffer().nbytes > max_size:
-            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
-            result, encimg = cv2.imencode('.jpg', img, encode_param)
-            if not result:
-                raise ValueError("图像编码失败")
-
-            image_data = BytesIO(encimg.tobytes())
-
-            if quality <= 5:
-                break
-            quality -= 5
-
-        return image_data
 
 
 
