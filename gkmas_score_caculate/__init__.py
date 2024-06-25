@@ -2,6 +2,7 @@
 
 from hoshino import Service
 from ..MDgen import *
+from ...groupmaster.switch import sdb
 
 sv = Service('gkmas_score_caculate')
 
@@ -20,6 +21,9 @@ button = [
 
 @sv.on_prefix('算分','查分')
 async def gkmas_score_caculate(bot,ev):
+    status = sdb.get_status(ev.real_group_id,'算分')
+    if not status:
+        return
     texts:str = ev.message.extract_plain_text().strip()
     data = texts.split(' ')[:3]
     if len(data) == 3:
@@ -49,6 +53,9 @@ async def gkmas_score_caculate(bot,ev):
 
 @sv.on_prefix('o算分','o查分')
 async def gkmas_score_caculate(bot,ev):
+    status = sdb.get_status(ev.real_group_id,'算分')
+    if not status:
+        return
     texts:str = ev.message.extract_plain_text().strip()
     data = texts.split(' ')[:3]
     if len(data) == 3:
@@ -80,6 +87,9 @@ rank2score = {1:1700,2:900,3:500,4:0}
 
 @sv.on_prefix('逆算分')
 async def gkmas_score_in_caculate(bot,ev):
+    status = sdb.get_status(ev.real_group_id,'算分')
+    if not status:
+        return
     texts:str = ev.message.extract_plain_text().strip()
     data = texts.split(' ')[:4]
     if len(data) == 4:
@@ -138,6 +148,9 @@ str_score = {
 
 @sv.on_prefix('算目标分')
 async def gkmas_score_ta_caculate(bot,ev):
+    status = sdb.get_status(ev.real_group_id,'算分')
+    if not status:
+        return
     texts:str = ev.message.extract_plain_text().strip()
     data = texts.split(' ')[:4]
     if len(data) == 4:
@@ -229,6 +242,9 @@ def is_float(self):
 
 @sv.on_prefix('算加练')
 async def gkmas_oiko_caculate(bot,ev):
+    status = sdb.get_status(ev.real_group_id,'算分')
+    if not status:
+        return
     texts:str = ev.message.extract_plain_text().strip()
     data = texts.split(' ')[:6]
     err = """格式错误，正确格式应为

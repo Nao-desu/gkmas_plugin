@@ -4,6 +4,7 @@ import re, html ,os, base64
 from PIL import Image,ImageSequence
 import numpy as np
 import cv2
+from ...groupmaster.switch import sdb
 
 sv = Service("gkmas_kawaii")
 
@@ -54,6 +55,9 @@ def process_frame(frame_image):
 
 @sv.on_prefix("卡哇伊")
 async def kawaii(bot, ev):
+    status = sdb.get_status(ev.real_group_id,'卡哇伊')
+    if not status:
+        return
     image_data = await get_pic(ev)
     if len(image_data.getvalue()) >= 1024 * 1024:
         await bot.send(ev, "传入图片过大，可能无法输出结果")
