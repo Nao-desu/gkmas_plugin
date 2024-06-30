@@ -106,14 +106,14 @@ async def gkmas_score_in_caculate(bot,ev):
     score = int(state*2.3)
     diff = score_r - score
     if diff < 0:await bot.send(ev,'最终评价分不合理');return
-    elif diff< 750+500:rank = 4
-    elif diff<1500+900:rank = 3
-    elif diff<1800+1700:rank = 2
+    elif diff< 750:rank = 4
+    elif diff<1500+500:rank = 3
+    elif diff<1800+900:rank = 2
     else:rank = 1
     if score_r < 10000:
-        if diff < 240+500:rank0 =4
-        elif diff<480+900:rank0 = 3
-        elif diff<780+1700:rank0 = 2
+        if diff < 240:rank0 =4
+        elif diff<480+500:rank0 = 3
+        elif diff<780+900:rank0 = 2
         else:rank0 = 1
         data = [f'您的面板为{state}',f'最终试验取得了:  \r{score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)(pro模式)  \r',f'{score_caculate(diff-rank2score[rank0])}~{score_caculate(diff+1-rank2score[rank0])-1}分({rank0}位)(regular模式)']
     else:
