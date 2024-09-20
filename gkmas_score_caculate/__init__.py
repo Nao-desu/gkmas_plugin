@@ -474,9 +474,8 @@ async def gkmas_oiko_caculate(bot,ev):
         _state = {"vo":_state_end_vo,"da":_state_end_da,"vi":_state_end_vi}
         trt = {"vo":[f1,f2,f2],"da":[f2,f1,f2],"vi":[f2,f2,f1]}
         max_state = max(_state,key=_state.get)
-        data = [f'建议选择{max_state}训练(pro模式)',f'训练后面板:{state[max_state]}→{_state[max_state]}(+{state[max_state]-_state[max_state]})  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
-        await bot.send(ev,MD_gen1(data,button))
-        vo,vo_p,da,da_p,vi,vi_p = data
+        _data = [f'建议选择{max_state}训练(pro模式)',f'训练后面板:{state[max_state]}→{_state[max_state]}(+{state[max_state]-_state[max_state]})  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
+        await bot.send(ev,MD_gen1(_data,button))
         for i in data:
             if not is_float(i):await bot.send(ev,err);return
         vo, vo_p, da, da_p, vi, vi_p = map(float, [vo, vo_p, da, da_p, vi, vi_p])
@@ -494,6 +493,6 @@ async def gkmas_oiko_caculate(bot,ev):
         _state = {"vo":_state_end_vo,"da":_state_end_da,"vi":_state_end_vi}
         trt = {"vo":[f1,f2,f2],"da":[f2,f1,f2],"vi":[f2,f2,f1]}
         max_state = max(_state,key=_state.get)
-        data = [f'建议选择{max_state}训练(master模式)',f'训练后面板:{state[max_state]}→{_state[max_state]}(+{state[max_state]-_state[max_state]})  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
-        await bot.send(ev,MD_gen1(data,button))
+        _data = [f'建议选择{max_state}训练(master模式)',f'训练后面板:{state[max_state]}→{_state[max_state]}(+{state[max_state]-_state[max_state]})  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
+        await bot.send(ev,MD_gen1(_data,button))
     else: await bot.send(ev,err);return
