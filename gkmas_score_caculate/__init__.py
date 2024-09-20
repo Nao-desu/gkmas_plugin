@@ -120,6 +120,10 @@ async def gkmas_score_caculate(bot,ev):
         for i in data:
             if not i.isdigit():await bot.send(ev,'格式错误，应为[算分 vo da vi 试验得分(可选)]');return
         vo,da,vi,score = data
+        vo = int(vo)
+        da = int(da)
+        vi = int(vi)
+        score = int(score)
         if int(vo)>1800 or int(vo)<1 or int(da)>1800 or int(da)<1 or int(vi)>1800 or int(vi)<1 :await bot.send(ev,'属性值不合理，应在1~1800区间内');return
         if int(score)<0:await bot.send(ev,'试验得分应为正数');return
         m = max(vo,da,vi)
@@ -203,6 +207,10 @@ async def gkmas_score_caculate(bot,ev):
         for i in data:
             if not i.isdigit():await bot.send(ev,'格式错误，应为[算分 vo da vi 试验得分(可选)]');return
         vo,da,vi,score = data
+        vo = int(vo)
+        da = int(da)
+        vi = int(vi)
+        score = int(score)
         if int(vo)>1800 or int(vo)<1 or int(da)>1800 or int(da)<1 or int(vi)>1800 or int(vi)<1 :await bot.send(ev,'属性值不合理，应在1~1800区间内');return
         if int(score)<0:await bot.send(ev,'试验得分应为正数');return
         m = max(vo,da,vi)
