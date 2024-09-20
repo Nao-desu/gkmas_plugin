@@ -459,7 +459,7 @@ async def gkmas_oiko_caculate(bot,ev):
         _vo,vo_p,_da,da_p,_vi,vi_p = data
         for i in data:
             if not is_float(i):await bot.send(ev,err);return
-        vo, vo_p, da, da_p, vi, vi_p = map(float, [_vo, vo_p, _da, da_p, _vi, vi_p])
+        vo = float(_vo);vo_p = float(vo_p);da = float(_da);da_p = float(da_p);vi = float(_vi);vi_p = float(vi_p)
         vo_p += 100;da_p += 100;vi_p += 100
         f1 = lambda x,y:int(x)+int(y*310/100) if x+int(y*310/100)<1500 else 1500
         f2 = lambda x,y:int(x)+int(y*145/100) if x+int(y*145/100)<1500 else 1500
@@ -476,9 +476,7 @@ async def gkmas_oiko_caculate(bot,ev):
         max_state = max(_state,key=_state.get)
         _data = [f'建议选择{max_state}训练(pro模式)',f'训练后面板:{state[max_state]}→{_state[max_state]}(+{_state[max_state]-state[max_state]})  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
         await bot.send(ev,MD_gen1(_data,button))
-        for i in data:
-            if not is_float(i):await bot.send(ev,err);return
-        vo, vo_p, da, da_p, vi, vi_p = map(float, [_vo, vo_p, _da, da_p, _vi, vi_p])
+        vo = float(_vo);vo_p = float(vo_p);da = float(_da);da_p = float(da_p);vi = float(_vi);vi_p = float(vi_p)
         vo_p += 100;da_p += 100;vi_p += 100
         f1 = lambda x,y:int(x)+int(y*310/100) if x+int(y*310/100)<1800 else 1800
         f2 = lambda x,y:int(x)+int(y*145/100) if x+int(y*145/100)<1800 else 1800
