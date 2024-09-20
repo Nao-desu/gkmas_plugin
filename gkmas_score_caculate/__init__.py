@@ -44,7 +44,7 @@ def cacu_pro(vo,da,vi):
     return msg
 
 def cacu_master(vo,da,vi):
-    msg = 'master模式\r'
+    msg = 'master模式:\r'
     state = vo+da+vi
     #1位18000(20000)分,2位12000,3位7000
     flu1 = 0
