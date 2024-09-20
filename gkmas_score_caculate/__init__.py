@@ -28,7 +28,7 @@ def r_score_caculate(score:int):
     s += 200;score -= 10000
     return int(s + score*0.01)
 
-async def cacu_pro(vo,da,vi):
+def cacu_pro(vo,da,vi):
     msg = 'pro模式:\r'
     state = vo+da+vi
     flu = 0
@@ -43,7 +43,7 @@ async def cacu_pro(vo,da,vi):
     else:msg += f'最终试验1位即可达成S评价'
     return msg
 
-async def cacu_master(vo,da,vi):
+def cacu_master(vo,da,vi):
     msg = 'master模式\r'
     state = vo+da+vi
     #1位18000(20000)分,2位12000,3位7000
