@@ -375,9 +375,11 @@ async def gkmas_score_ta_caculate(bot,ev):
         if master_result[rank][1] > master_rank_score[rank]:
             result_master.append(master_result[rank])
             break
+    for rank in range(1,5):
         if pro_result[rank][1] > pro_rank_score[rank]:
             result_pro.append(pro_result[rank])
             break
+    for rank in range(1,5):
         if regular_result[rank][1] > regular_rank_score[rank]:
             result_regular.append(regular_result[rank])
             break
