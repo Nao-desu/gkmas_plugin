@@ -392,21 +392,27 @@ async def gkmas_score_ta_caculate(bot,ev):
     msg = ''
     result = result_master[0]
     rank = result[0]
-    if master_rank_score[rank-1] < result[1]:
+    if rank == 1:
+        msg += f'您的预计面板为{result[3]}→{result[4]}(master模式)\r   达到目标评价需要在最终试验获得:\r   {result[1]}~{result[2]}分\r'
+    elif master_rank_score[rank-1] < result[1]:
         msg += f'您的预计面板为{result[3]}→{result[4]}(master模式)({rank}位)\r   达到目标评价以上需要在最终试验取得{rank-1}位(预计{master_rank_score[rank-1]}分)\r   注意：目标评价分过低，你无法精确获得此评价分\r'
     else:
         msg += f'您的预计面板为{result[3]}→{result[4]}(master模式)({rank}位)\r   达到目标评价需要在最终试验获得:\r   {result[1]}~{result[2]}分({rank}位)\r'
     if m < 1500:
         result = result_pro[0]
-        rank = result[0]
-        if pro_rank_score[rank-1] < result[1]:
+        rank = result[0]    
+        if rank == 1:
+            msg += f'您的预计面板为{result[3]}→{result[4]}(pro模式)\r   达到目标评价需要在最终试验获得:\r   {result[1]}~{result[2]}分\r'
+        elif pro_rank_score[rank-1] < result[1]:
             msg += f'您的预计面板为{result[3]}→{result[4]}(pro模式)({rank}位)\r   达到目标评价以上需要在最终试验取得{rank-1}位(预计{pro_rank_score[rank-1]}分)\r   注意：目标评价分过低，你无法精确获得此评价分\r'
         else:
             msg += f'您的预计面板为{result[3]}→{result[4]}(pro模式)({rank}位)\r   达到目标评价需要在最终试验获得:\r   {result[1]}~{result[2]}分({rank}位)\r'
     if m < 1000 and score_r < 10000:
         result = result_regular[0]
         rank = result[0]
-        if regular_rank_score[rank-1] < result[1]:
+        if rank == 1:
+            msg += f'您的预计面板为{result[3]}→{result[4]}(regular模式)\r   达到目标评价需要在最终试验获得:\r   {result[1]}~{result[2]}分\r'
+        elif regular_rank_score[rank-1] < result[1]:
             msg += f'您的预计面板为{result[3]}→{result[4]}(regular模式)({rank}位)\r   达到目标评价以上需要在最终试验取得{rank-1}位(预计{regular_rank_score[rank-1]}分)\r   注意：目标评价分过低，你无法精确获得此评价分\r'
         else:
             msg += f'您的预计面板为{result[3]}→{result[4]}(regular模式)({rank}位)\r   达到目标评价需要在最终试验获得:\r   {result[1]}~{result[2]}分({rank}位)\r'
