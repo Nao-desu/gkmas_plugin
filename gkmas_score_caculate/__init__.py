@@ -319,13 +319,13 @@ master_rank_score = {1:20000,2:12000,3:7000,4:0}
 pro_rank_score = {1:7000,2:5000,3:2500,4:0}
 regular_rank_score = {1:2600,2:1600,3:800,4:0}
 
-def score_by_rank(rank,vo,da,vi,score_r):
+def score_by_rank(rank,vo,da,vi,score_r,max):
     ex = {1:30,2:20,3:10,4:0}
     ex = ex[rank]
     flu = 0
-    if 1500-vo <=ex:flu += vo-(1500-ex)
-    if 1500-da <=ex:flu += da-(1500-ex)
-    if 1500-vi <=ex:flu += vi-(1500-ex)
+    if max-vo <=ex:flu += vo-(max-ex)
+    if max-da <=ex:flu += da-(max-ex)
+    if max-vi <=ex:flu += vi-(max-ex)
     state = vo+da+vi
     state_end = state+ex*3-flu
     score = int(state_end*2.3)
@@ -365,9 +365,9 @@ async def gkmas_score_ta_caculate(bot,ev):
     else: await bot.send(ev,'格式错误，应为[算目标分 vo da vi 目标评价分]');return
     vo,da,vi = data[:3]
     #把所有排位结果计算出来
-    master_result = {rank:score_by_rank(rank,vo,da,vi,score_r) for rank in range(1,5)}
-    pro_result = {rank:score_by_rank(rank,vo,da,vi,score_r) for rank in range(1,5)}
-    regular_result = {rank:score_by_rank(rank,vo,da,vi,score_r) for rank in range(1,5)}
+    master_result = {rank:score_by_rank(rank,vo,da,vi,score_r,1800) for rank in range(1,5)}
+    pro_result = {rank:score_by_rank(rank,vo,da,vi,score_r,1500) for rank in range(1,5)}
+    regular_result = {rank:score_by_rank(rank,vo,da,vi,score_r,1000) for rank in range(1,5)}
     result_master = []
     result_pro = []
     result_regular = []
