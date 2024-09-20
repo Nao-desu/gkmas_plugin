@@ -46,7 +46,7 @@ def cacu_pro(vo,da,vi):
 def cacu_master(vo,da,vi):
     msg = 'master模式:\r'
     state = vo+da+vi
-    #1位18000(20000)分,2位12000,3位7000
+    #1位20000分,2位12000,3位7000
     flu1 = 0
     flu2 = 0
     flu3 = 0
@@ -62,24 +62,8 @@ def cacu_master(vo,da,vi):
     score1 = 1700 + int((state+90-flu1)*2.3)
     score2 = 900 + int((state+90-flu2)*2.3)
     score3 = 500 + int((state+90-flu3)*2.3)
-    if score_caculate(11500-score1) < 18000:
-        if score_caculate(11500-score2) > 18000:
-            msg += '最终试验1位即可达成A+评价\r'
-        else:
-            if score_caculate(11500-score2) < 12000:
-                if score_caculate(11500-score3) > 12000:
-                    msg += '最终试验2位即可达成A+评价\r'
-                else:
-                    if score_caculate(11500-score3) < 7000:
-                        msg += '最终试验3位即可达成A+评价\r'
-                    else:
-                        msg += f'A+评价需要最终试验获得{score_caculate(11500-score3)}分(3位)\r'
-            else:
-                msg += f'A+评价需要最终试验获得{score_caculate(11500-score2)}分(2位)\r'
-    else:
-        msg += f'A+评价需要最终试验获得{score_caculate(11500-score1)}分\r'
-    if score_caculate(13000-score1) < 18000:
-        if score_caculate(13000-score2) > 18000:
+    if score_caculate(13000-score1) < 20000:
+        if score_caculate(13000-score2) > 20000:
             msg += '最终试验1位即可达成S评价\r'
         else:
             if score_caculate(13000-score2) < 12000:
@@ -94,8 +78,8 @@ def cacu_master(vo,da,vi):
                 msg += f'S评价需要最终试验获得{score_caculate(13000-score2)}分(2位)\r'
     else:
         msg += f'S评价需要最终试验获得{score_caculate(13000-score1)}分\r'
-    if score_caculate(14500 - score1) < 18000:
-        if score_caculate(14500 - score2) > 18000:
+    if score_caculate(14500 - score1) < 20000:
+        if score_caculate(14500 - score2) > 20000:
             msg += '最终试验1位即可达成S+评价\r'
         else:
             if score_caculate(14500 - score2) < 12000:
@@ -141,13 +125,13 @@ async def gkmas_score_caculate(bot,ev):
         m = max(vo,da,vi)
         state = vo+da+vi
         data = [f'最终得分']
-        if score > 18000:
+        if score > 20000:
             flu = 0
             if 1800 - vo <= 30: flu += vo - 1770
             if 1800 - da <= 30: flu += da - 1770
             if 1800 - vi <= 30: flu += vi - 1770
             m_score = 1700 + int((state + 90 - flu) * 2.3)
-        elif score in range(12000,18000):
+        elif score in range(12000,20000):
             flu = 0
             if 1800 - vo <= 20: flu += vo - 1780
             if 1800 - da <= 20: flu += da - 1780
@@ -224,13 +208,13 @@ async def gkmas_score_caculate(bot,ev):
         m = max(vo,da,vi)
         state = vo+da+vi
         msg = f'最终得分\r'
-        if score > 18000:
+        if score > 20000:
             flu = 0
             if 1800 - vo <= 30: flu += vo - 1770
             if 1800 - da <= 30: flu += da - 1770
             if 1800 - vi <= 30: flu += vi - 1770
             m_score = 1700 + int((state + 90 - flu) * 2.3)
-        elif score in range(12000,18000):
+        elif score in range(12000,20000):
             flu = 0
             if 1800 - vo <= 20: flu += vo - 1780
             if 1800 - da <= 20: flu += da - 1780
@@ -280,7 +264,7 @@ async def gkmas_score_caculate(bot,ev):
         msg += cacu_pro(vo,da,vi) + '\r' + cacu_master(vo,da,vi)
     await bot.send(ev,msg)
 
-#假设master第一名为18000分(2890),第二名为12000分(2410),第三名为7000分(1800)
+#假设master第一名为20000分(3050),第二名为12000分(2410),第三名为7000分(1800)
 # 假设pro第一名为7000分(1800)，第二名为5000分(1500)，第三名为2500分(750)
 #初：第一名2600分(780)，第二名1600分(480)，第三名800分(240)
 rank2score = {1:1700,2:900,3:500,4:0}
@@ -310,7 +294,7 @@ async def gkmas_score_in_caculate(bot,ev):
     msg = ''
     if diff < 1800 + 500:rank = 4
     elif diff< 2410 + 900:rank = 3
-    elif diff< 2890 + 1700:rank = 2
+    elif diff< 3050 + 1700:rank = 2
     else:rank = 1
     msg += f'最终试验取得了:  \rmaster模式:{score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)'
     if m < 1500:
@@ -330,7 +314,7 @@ async def gkmas_score_in_caculate(bot,ev):
     msg = MD_gen1(data,button)
     await bot.send(ev,msg)
 
-master_rank_score = {1:18000,2:12000,3:7000,4:0}
+master_rank_score = {1:20000,2:12000,3:7000,4:0}
 pro_rank_score = {1:7000,2:5000,3:2500,4:0}
 regular_rank_score = {1:2600,2:1600,3:800,4:0}
 
