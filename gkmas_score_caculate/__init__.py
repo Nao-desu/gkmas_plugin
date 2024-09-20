@@ -286,6 +286,7 @@ async def gkmas_score_in_caculate(bot,ev):
             n += 1
     else: await bot.send(ev,'格式错误，应为[逆算分 vo da vi 最终评价分](无需中括号)');return
     vo,da,vi,score_r = data
+    data = [f'您的面板为{vo + da + vi}']
     state = vo+da+vi
     score = int(state*2.3)
     m = max(vo,da,vi)
@@ -358,8 +359,8 @@ async def gkmas_score_ta_caculate(bot,ev):
             else:score_r = int(i)
             if n <= 2:
                 data[n] = int(i)
-                if int(i)>1500 or int(i)<1:
-                    await bot.send(ev,f'你输入的第{n+1}个属性值不在1~1500区间内');return
+                if int(i)>1800 or int(i)<1:
+                    await bot.send(ev,f'你输入的第{n+1}个属性值不在1~1800区间内');return
             n += 1
     else: await bot.send(ev,'格式错误，应为[算目标分 vo da vi 目标评价分]');return
     vo,da,vi = data[:3]
@@ -415,6 +416,7 @@ async def gkmas_score_ta_caculate(bot,ev):
     data.append(msg)
     data.append('得分与排名关系仅供参考')
     msg = MD_gen1(data,button)
+    await bot.send(ev,msg)
 
 def is_float(self):
     try:
