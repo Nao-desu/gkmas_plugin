@@ -191,7 +191,7 @@ async def gkmas_score_caculate(bot,ev):
     else: await bot.send(ev,'格式错误，应为[算分 vo da vi 试验得分(可选)]');return
     vo,da,vi = data
     m = max(vo,da,vi)
-    data = [f'您的面板为{state}']
+    data = [f'您的面板为{vo + da + vi}']
     if m > 1500:
         data.append(cacu_master(vo,da,vi))
     else:
