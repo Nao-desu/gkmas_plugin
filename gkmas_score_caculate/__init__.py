@@ -69,6 +69,8 @@ def cacu_master(vo,da,vi):
             if score_caculate(11500-score2) < 12000:
                 if score_caculate(11500-score3) > 12000:
                     msg += '最终试验2位即可达成A+评价\r'
+                elif score_caculate(11500-score2) > 15000:
+                    msg += f'A+评价需要最终试验1位或获得{score_caculate(11500-score2)}分(2位)\r'
                 else:
                     if score_caculate(11500-score3) < 7000:
                         msg += '最终试验3位即可达成A+评价\r'
@@ -87,6 +89,8 @@ def cacu_master(vo,da,vi):
     if score_caculate(13000-score1) < 15000:
         if score_caculate(13000-score2) > 20000:
             msg += '最终试验1位即可达成S评价\r'
+        elif score_caculate(13000-score2) > 15000:
+            msg += f'S评价需要最终试验1位或获得{score_caculate(13000-score2)}分(2位)\r'
         else:
             if score_caculate(13000-score2) < 12000:
                 if score_caculate(13000-score3) > 12000:
