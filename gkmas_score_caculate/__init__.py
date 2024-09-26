@@ -130,7 +130,7 @@ def cacu_master(vo,da,vi):
 
 button = [
     {"buttons": [button_gen(False,'算分','算分'),button_gen(False,'逆算分','逆算分'),button_gen(False,'算目标分','算目标分')]},
-    {"buttons": [button_gen(False,'算加练','算加练'),button_gen(True,'帮助','学马仕帮助')]}
+    {"buttons": [button_gen(False,'算加练','算加练'),link_button('帮助','https://www.koharu.cn/docs/gkmas/gkmas.html#%E7%AE%97%E5%88%86')]}
 ]
 
 @sv.on_prefix('算分','查分')
