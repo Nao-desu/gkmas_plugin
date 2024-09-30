@@ -127,7 +127,7 @@ def cacu_master(vo,da,vi):
                 msg += f'S+评价需要最终试验获得{score_caculate(14500 - score2)}分(2位)\r'
     else:
         msg += f'S+评价需要最终试验获得{score_caculate(14500 - score1)}分\r'
-    if state > 4000:
+    if state > 3800:
         if score_caculate(16000 - score1) < 20000:
             if score_caculate(16000 - score2) > 20000:
                 msg += '最终试验1位即可达成SS评价\r'
