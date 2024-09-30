@@ -62,30 +62,31 @@ def cacu_master(vo,da,vi):
     score1 = 1700 + int((state+90-flu1)*2.3)
     score2 = 900 + int((state+90-flu2)*2.3)
     score3 = 500 + int((state+90-flu3)*2.3)
-    if score_caculate(11500-score1) < 15000:
-        if score_caculate(11500-score2) > 20000:
-            msg += '最终试验1位即可达成A+评价\r'
-        else:
-            if score_caculate(11500-score2) < 12000:
-                if score_caculate(11500-score3) > 12000:
-                    msg += '最终试验2位即可达成A+评价\r'
-                elif score_caculate(11500-score2) > 15000:
-                    msg += f'A+评价需要最终试验1位或获得{score_caculate(11500-score2)}分(2位)\r'
-                else:
-                    if score_caculate(11500-score3) < 7000:
-                        msg += '最终试验3位即可达成A+评价\r'
+    if state < 3500:
+        if score_caculate(11500-score1) < 15000:
+            if score_caculate(11500-score2) > 20000:
+                msg += '最终试验1位即可达成A+评价\r'
+            else:
+                if score_caculate(11500-score2) < 12000:
+                    if score_caculate(11500-score3) > 12000:
+                        msg += '最终试验2位即可达成A+评价\r'
+                    elif score_caculate(11500-score2) > 15000:
+                        msg += f'A+评价需要最终试验1位或获得{score_caculate(11500-score2)}分(2位)\r'
                     else:
-                        msg += f'A+评价需要最终试验获得{score_caculate(11500-score3)}分(3位)\r'
-            else:
-                msg += f'A+评价需要最终试验获得{score_caculate(11500-score2)}分(2位)\r'
-    else:
-        if score_caculate(11500-score1) < 20000:
-            if score_caculate(11500-score2) < 20000:
-                msg += f'A+评价需要最终试验获得{score_caculate(11500-score1)}分(1位)/{score_caculate(11500-score2)}分(2位)\r'
-            else:
-                msg += f'A+评价需要最终试验获得{score_caculate(11500-score1)}分(1位)\r'
+                        if score_caculate(11500-score3) < 7000:
+                            msg += '最终试验3位即可达成A+评价\r'
+                        else:
+                            msg += f'A+评价需要最终试验获得{score_caculate(11500-score3)}分(3位)\r'
+                else:
+                    msg += f'A+评价需要最终试验获得{score_caculate(11500-score2)}分(2位)\r'
         else:
-            msg += f'A+评价需要最终试验获得{score_caculate(11500-score1)}分\r'
+            if score_caculate(11500-score1) < 20000:
+                if score_caculate(11500-score2) < 20000:
+                    msg += f'A+评价需要最终试验获得{score_caculate(11500-score1)}分(1位)/{score_caculate(11500-score2)}分(2位)\r'
+                else:
+                    msg += f'A+评价需要最终试验获得{score_caculate(11500-score1)}分(1位)\r'
+            else:
+                msg += f'A+评价需要最终试验获得{score_caculate(11500-score1)}分\r'
     if score_caculate(13000-score1) < 15000:
         if score_caculate(13000-score2) > 20000:
             msg += '最终试验1位即可达成S评价\r'
@@ -126,6 +127,23 @@ def cacu_master(vo,da,vi):
                 msg += f'S+评价需要最终试验获得{score_caculate(14500 - score2)}分(2位)\r'
     else:
         msg += f'S+评价需要最终试验获得{score_caculate(14500 - score1)}分\r'
+    if state > 4000:
+        if score_caculate(16000 - score1) < 20000:
+            if score_caculate(16000 - score2) > 20000:
+                msg += '最终试验1位即可达成SS评价\r'
+            else:
+                if score_caculate(16000 - score2) < 12000:
+                    if score_caculate(16000 - score3) > 12000:
+                        msg += '最终试验2位即可达成SS评价\r'
+                    else:
+                        if score_caculate(16000 - score3) < 7000:
+                            msg += '最终试验3位即可达成SS评价\r'
+                        else:
+                            msg += f'SS评价需要最终试验获得{score_caculate(16000 - score3)}分(3位)\r'
+                else:
+                    msg += f'SS评价需要最终试验获得{score_caculate(16000 - score2)}分(2位)\r'
+        else:
+            msg += f'SS评价需要最终试验获得{score_caculate(16000 - score1)}分\r'
     return msg
 
 button = [
