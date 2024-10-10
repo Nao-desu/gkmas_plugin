@@ -1,7 +1,7 @@
 #算分
 
 from hoshino import Service
-from ..MDgen import *
+from hoshino.MD import *
 from ...groupmaster.switch import sdb
 
 sv = Service('gkmas_score_caculate')
@@ -127,7 +127,7 @@ def cacu_master(vo,da,vi):
                 msg += f'S+评价需要最终试验获得{score_caculate(14500 - score2)}分(2位)\r'
     else:
         msg += f'S+评价需要最终试验获得{score_caculate(14500 - score1)}分\r'
-    if state > 4000:
+    if state > 3800:
         if score_caculate(16000 - score1) < 20000:
             if score_caculate(16000 - score2) > 20000:
                 msg += '最终试验1位即可达成SS评价\r'
@@ -146,10 +146,14 @@ def cacu_master(vo,da,vi):
             msg += f'SS评价需要最终试验获得{score_caculate(16000 - score1)}分\r'
     return msg
 
+b = button_gen
+
 button = [
-    {"buttons": [button_gen(False,'算分','算分'),button_gen(False,'逆算分','逆算分'),button_gen(False,'算目标分','算目标分')]},
-    {"buttons": [button_gen(False,'算加练','算加练'),link_button('帮助','https://www.koharu.cn/docs/gkmas/gkmas.html#%E7%AE%97%E5%88%86')]}
+    [b('算分','算分'),b('逆算分','逆算分'),b('算目标分','算目标分'),b('算加练','算加练')],
+    [b('帮助','https://www.koharu.cn/docs/gkmas/gkmas.html#%E7%AE%97%E5%88%86',type_int=0)]
 ]
+
+button = generate_buttons(button)
 
 @sv.on_prefix('算分','查分')
 async def gkmas_score_caculate(bot,ev):
@@ -223,7 +227,7 @@ async def gkmas_score_caculate(bot,ev):
                 m_score = int((state)*2.3)
             data[1] += f'\rpro模式:{m_score + r_score_caculate(score)}'
         data.append('如果不想更新旧版qq，可以使用[o算分]命令(原命令前加字母o)，可以输出旧版结果')
-        msg = MD_gen1(data,button)
+        msg = generate_md(3,data,button)
         await bot.send(ev,msg)
         return
     else: await bot.send(ev,'格式错误，应为[算分 vo da vi 试验得分(可选)]');return
@@ -235,7 +239,7 @@ async def gkmas_score_caculate(bot,ev):
     else:
         data.append(cacu_pro(vo,da,vi) + '\r' + cacu_master(vo,da,vi))
     data.append('如果不想更新旧版qq，可以使用[o算分]命令(原命令前加字母o)，可以输出旧版结果')
-    msg = MD_gen1(data,button)
+    msg = generate_md(3,data,button)
     await bot.send(ev,msg)
 
 @sv.on_prefix('o算分','o查分')
@@ -370,7 +374,7 @@ async def gkmas_score_in_caculate(bot,ev):
         msg += f'\rregular模式:{score_caculate(diff-rank2score[rank])}~{score_caculate(diff+1-rank2score[rank])-1}分({rank}位)\r'
     data.append(msg)
     data.append('得分与排名关系仅供参考')
-    msg = MD_gen1(data,button)
+    msg = generate_md(3,data,button)
     await bot.send(ev,msg)
 
 master_rank_score = {1:20000,2:12000,3:7000,4:0}
@@ -478,12 +482,12 @@ async def gkmas_score_ta_caculate(bot,ev):
             msg += f'您的预计面板为{result[3]}→{result[4]}(regular模式)({rank}位)\r   达到目标评价需要在最终试验获得:\r   {result[1]}~{result[2]}分({rank}位)\r'
     data.append(msg)
     data.append('得分与排名关系仅供参考')
-    msg = MD_gen1(data,button)
+    msg = generate_md(3,data,button)
     await bot.send(ev,msg)
 
-def is_float(self):
+def is_float(value):
     try:
-        float(self)
+        float(value)
         return True
     except ValueError:
         return False
@@ -517,7 +521,7 @@ async def gkmas_oiko_caculate(bot,ev):
             if state_end_1 > 1500:state_end_1 = 1500
             if state_end_2 > 1500:state_end_2 = 1500
             data[1] += f'pro模式：\r  主训练→{state_end_1}  \r  副训练→{state_end_2}  \r'
-        await bot.finish(ev,MD_gen1(data,button));return
+        await bot.finish(ev,generate_md(3,data,button));return
     elif len(data) == 6:
         _vo,vo_p,_da,da_p,_vi,vi_p = data.copy()
         for i in data:
@@ -538,7 +542,7 @@ async def gkmas_oiko_caculate(bot,ev):
         trt = {"vo":[f1,f2,f2],"da":[f2,f1,f2],"vi":[f2,f2,f1]}
         max_state = max(_state,key=_state.get)
         _data = [f'建议选择{max_state}训练(pro模式)',f'训练后面板:{state[max_state]}→{_state[max_state]}(+{_state[max_state]-state[max_state]})  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
-        await bot.send(ev,MD_gen1(_data,button))
+        await bot.send(ev,generate_md(3,_data,button))
         _vo,vo_p,_da,da_p,_vi,vi_p = data.copy()
         vo = float(_vo);vo_p = float(vo_p);da = float(_da);da_p = float(da_p);vi = float(_vi);vi_p = float(vi_p)
         vo_p += 100;da_p += 100;vi_p += 100
@@ -556,5 +560,5 @@ async def gkmas_oiko_caculate(bot,ev):
         trt = {"vo":[f1,f2,f2],"da":[f2,f1,f2],"vi":[f2,f2,f1]}
         max_state = max(_state,key=_state.get)
         _data = [f'建议选择{max_state}训练(master模式)',f'训练后面板:{state[max_state]}→{_state[max_state]}(+{_state[max_state]-state[max_state]})  \rvo:{int(vo)}→{trt[max_state][0](vo,vo_p)}  \rda:{int(da)}→{trt[max_state][1](da,da_p)}  \rvi:{int(vi)}→{trt[max_state][2](vi,vi_p)}  \r',f'未考虑s卡课后加值']
-        await bot.send(ev,MD_gen1(_data,button))
+        await bot.send(ev,generate_md(3,_data,button))
     else: await bot.send(ev,err);return
