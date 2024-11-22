@@ -150,7 +150,7 @@ b = button_gen
 
 button = [
     [b('算分','算分'),b('逆算分','逆算分'),b('算目标分','算目标分'),b('算加练','算加练')],
-    [b('帮助','https://www.koharu.cn/docs/gkmas/gkmas.html#%E7%AE%97%E5%88%86',type_int=0)]
+    [b('帮助','https://www.koharu.cn:8149/docs/gkmas/gkmas.html#%E7%AE%97%E5%88%86',type_int=0)]
 ]
 
 button = generate_buttons(button)
