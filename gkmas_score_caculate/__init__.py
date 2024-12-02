@@ -127,7 +127,7 @@ def cacu_master(vo,da,vi):
                 msg += f'S+评价需要最终试验获得{score_caculate(14500 - score2)}分(2位)\r'
     else:
         msg += f'S+评价需要最终试验获得{score_caculate(14500 - score1)}分\r'
-    if state > 3800:
+    if state > 3500:
         if score_caculate(16000 - score1) < 20000:
             if score_caculate(16000 - score2) > 20000:
                 msg += '最终试验1位即可达成SS评价\r'
@@ -149,8 +149,8 @@ def cacu_master(vo,da,vi):
 b = button_gen
 
 button = [
-    [b('算分','算分'),b('逆算分','逆算分'),b('算目标分','算目标分'),b('算加练','算加练')],
-    [b('帮助','https://www.koharu.cn:8149/docs/gkmas/gkmas.html#%E7%AE%97%E5%88%86',type_int=0)]
+    [b('算分','算分'),b('逆算分','逆算分'),b('算目标分','算目标分')],
+    [b('算加练','算加练'),b('帮助','https://www.koharu.cn:8149/docs/gkmas/gkmas.html#%E7%AE%97%E5%88%86',type_int=0)]
 ]
 
 button = generate_buttons(button)
