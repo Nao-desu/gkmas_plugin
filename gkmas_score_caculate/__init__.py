@@ -89,7 +89,7 @@ async def score_reverse_caculate(bot, ev):
         return
     data = [int(i) for i in data[:4]]
     mode_list = [mode for mode in MAX_PANEL if max(data[:3]) <= MAX_PANEL[mode]]
-    msg_data = [f"您的面板为{sum(data)},最终试验取得了","","得分与排名关系仅供参考"]
+    msg_data = [f"您的面板为{sum(data[:3])},最终试验取得了","","得分与排名关系仅供参考"]
     for mode in mode_list:
         status,result = reverse_caculate_by_mode(mode,data)
         if not status:
