@@ -45,7 +45,7 @@ def caculate_by_mode(mode:str, data:list) -> str:
                 for i in range(len(all_order)-1,0,-1):
                     if rank_result[all_order[i]] == 0 and rank_result[all_order[i-1]] == 0:
                         del rank_result[all_order[i]]
-            result += f"{rank} -> "
+            result += f"{rank} → "
             for order in rank_result:
                 result += f"{rank_result[order]}({f'{order}位' if order != 4 else '不合格'})" if rank_result[order] != 0 else f"{order}位"
                 result += "/"
