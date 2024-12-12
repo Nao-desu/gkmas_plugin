@@ -129,7 +129,7 @@ async def oikomi_caculate(bot, ev):
     if not status:
         await bot.send(ev,err_msg(hint_msg))
         return
-    data = [int(i) for i in data]
+    data = [float(i) for i in data]
     msg_data = [f"计算结果","","已包含期末考试后加成,未考虑s卡课后加成"]
     if len(data) == 2:
         mode_list = [mode for mode in MAX_PANEL if data[0] <= MAX_PANEL[mode]]
