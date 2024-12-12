@@ -118,7 +118,7 @@ def oikomi_caculate_3_by_mode(mode:str, data:list) -> str:
     result += f"vo:{vo_result}" + (f"(-{max_result-vo_result})," if vo_result != max_result else ",")
     result += f"da:{da_result}" + (f"(-{max_result-da_result})," if da_result != max_result else ",")
     result += f"vi:{vi_result}" + (f"(-{max_result-vi_result})" if vi_result != max_result else "")
-    return result
+    return result + "\r"
 
 def oikomi_caculate_1_by_mode(mode:str, data:list) -> str:
     main_panel,sub_panel = OIKOMI_PANEL[mode]
