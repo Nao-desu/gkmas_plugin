@@ -1,9 +1,7 @@
 from hoshino import Service,aiorequests
 from io import BytesIO
 import re, html ,os, base64
-from PIL import Image,ImageSequence
-import numpy as np
-import cv2
+from PIL import Image
 from ...groupmaster.switch import sdb
 
 sv = Service("gkmas_kawaii")
