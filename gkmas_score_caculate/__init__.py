@@ -105,7 +105,7 @@ async def score_target_caculate(bot, ev):
     texts:str = ev.message.extract_plain_text().strip()
     data = [i for i in texts.split(' ') if i][:4]
     if data[-1].upper() in RANK_2_EVALUATION.keys():
-        data[-1] = RANK_2_EVALUATION[data[-1].upper()]
+        data[-1] = str(RANK_2_EVALUATION[data[-1].upper()])
     status,hint_msg = check_parameter(data,3)
     if not status:
         await bot.send(ev,err_msg(hint_msg))
