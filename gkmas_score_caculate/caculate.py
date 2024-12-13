@@ -47,7 +47,10 @@ def caculate_by_mode(mode:str, data:list) -> str:
                         del rank_result[all_order[i]]
             result += f"{rank} → "
             for order in rank_result:
-                result += f"{rank_result[order]}({f'{order}位' if order != 4 else '不合格'})" if rank_result[order] != 0 else f"{order}位"
+                order_txt = f"({order}位)" if order != 4 else "(不合格)"
+                if order == 1 and rank_result[order] > CONTEST_RIVALS_SCORE_RANGE[mode][1][1]:
+                    order_txt = ""
+                result += f"{rank_result[order]}{order_txt}" if rank_result[order] != 0 else f"{order}位"
                 result += "/"
             result = result[:-1] + "\n"
     if result == f"{mode}模式:\n":
@@ -64,7 +67,10 @@ def reverse_caculate_by_mode(mode:str, data:list):
     elif diff < ORDER_2_EVALUATION[2] + score2evaluation(CONTEST_RIVALS_SCORE_RANGE[mode][2][0]):order = 3
     elif diff < ORDER_2_EVALUATION[1] + score2evaluation(CONTEST_RIVALS_SCORE_RANGE[mode][1][0]):order = 2
     else:order = 1
-    result = f"{mode}模式:{evaluation2score(diff-ORDER_2_EVALUATION[order])}~{evaluation2score(diff+1-ORDER_2_EVALUATION[order])-1}分({f'{order}位' if order != 4 else '不合格'})\r"
+    order_txt = f"({order}位)" if order != 4 else "(不合格)"
+    if order == 1 and evaluation2score(diff-ORDER_2_EVALUATION[order]) > CONTEST_RIVALS_SCORE_RANGE[mode][1][1]:
+        order_txt = ""
+    result = f"{mode}模式:{evaluation2score(diff-ORDER_2_EVALUATION[order])}~{evaluation2score(diff+1-ORDER_2_EVALUATION[order])-1}分{order_txt}\r"
     return True,result
 
 def target_caculate_by_mode(mode:str, data:list) -> str:
@@ -96,7 +102,10 @@ def target_caculate_by_mode(mode:str, data:list) -> str:
                     del order_result[all_order[i]]
         result = f"{mode}模式:"
         for order in order_result:
-            result += f"{order_result[order]}({f'{order}位' if order != 4 else '不合格'})" if order_result[order] != 0 else f"{order}位"
+            order_txt = f"({order}位)" if order != 4 else "(不合格)"
+            if order == 1 and order_result[order] > CONTEST_RIVALS_SCORE_RANGE[mode][1][1]:
+                order_txt = ""
+            result += f"{order_result[order]}{order_txt}" if order_result[order] != 0 else f"{order}位"
             result += "/"
         result = result[:-1] + "\r"
     return result
