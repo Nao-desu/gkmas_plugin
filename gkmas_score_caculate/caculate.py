@@ -50,8 +50,8 @@ def caculate_by_mode(mode:str, data:list) -> str:
                 result += f"{rank_result[order]}({f'{order}位' if order != 4 else '不合格'})" if rank_result[order] != 0 else f"{order}位"
                 result += "/"
             result = result[:-1] + "\n"
-        else:
-            return ""
+    if result == f"{mode}模式:\n":
+        return ""
     return result
 
 def reverse_caculate_by_mode(mode:str, data:list):
