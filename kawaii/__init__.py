@@ -98,7 +98,7 @@ async def send_msg(bot, ev, tag):
 async def kawaii(bot, ev):
     await send_msg(bot, ev, 'kawaii')
 
-@sv.on_prefix("喜欢甜食?")
+@sv.on_prefix("喜欢甜食?","喜欢甜食？")
 @check_status('卡哇伊')
 async def amai(bot, ev):
     await send_msg(bot, ev, 'amai')
