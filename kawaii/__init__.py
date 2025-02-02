@@ -2,7 +2,7 @@ from hoshino import Service,aiorequests
 from io import BytesIO
 import re, html ,os, base64
 from PIL import Image
-from ...groupmaster.switch import sdb
+from ...groupmaster.switch import check_status
 
 sv = Service("gkmas_kawaii")
 
@@ -19,46 +19,55 @@ async def get_pic(ev):
     return pic
 
 path = os.path.dirname(__file__)
-img1 = os.path.join(path, "kwy1.png")
-img2 = os.path.join(path, "kwy2.png")
 
-def process_frame(frame_image):
+size = {
+    'kawaii':{
+        1: (675, 900, 43),
+        2: (900, 506, 46)
+    },
+    'amai':{
+        1: (506, 900, 16),
+        2: (900, 506, 16)
+    }
+}
+
+
+def process_frame(frame_image,tag):
     x, y = frame_image.size
     if x / y < 1.2:
-        image_flame = Image.open(img1)
-        if x / y < 589 / 814:
-            x1, y1 = x, x / (589 / 814)
+        image_flame = Image.open(os.path.join(path, f"{tag}1.png"))
+        a,b,c = size[tag][1]
+        d = a - c*2
+        e = b - c*2
+        if x / y < d / e:
+            x1, y1 = x, x / (d / e)
         else:
-            x1, y1 = y * 589 / 814, y
-        d = 43
-        x2, y2 = 675, 900
-        x3, y3 = 589, 814
+            x1, y1 = y * d / e, y
+        _d = c
+        x2, y2 = a, b
+        x3, y3 = d, e
     else:
-        image_flame = Image.open(img2)
-        if x / y < 808 / 414:
-            x1, y1 = x, x / (808 / 414)
+        image_flame = Image.open(os.path.join(path, f"{tag}2.png"))
+        a,b,c = size[tag][2]
+        d = a - c*2
+        e = b - c*2
+        if x / y < d / e:
+            x1, y1 = x, x / (d / e)
         else:
-            x1, y1 = y * 808 / 414, y
-        d = 46
-        x2, y2 = 900, 506
-        x3, y3 = 808, 414
+            x1, y1 = y * d / e, y
+        _d = c
+        x2, y2 = a, b
+        x3, y3 = d, e
 
     frame_image = frame_image.crop((abs(int((x1 - x) / 2)), abs(int((y1 - y) / 2)), int((x1 + x) / 2), int((y1 + y) / 2)))
     frame_image = frame_image.resize((x3, y3))
     bg = Image.new('RGBA', (x2, y2), (255, 255, 255, 255))
-    bg.paste(frame_image, (d, d))
+    bg.paste(frame_image, (_d, _d))
     bg.paste(image_flame, (0, 0), image_flame)
     return bg.convert("RGB")
 
-
-@sv.on_prefix("卡哇伊")
-async def kawaii(bot, ev):
-    status = sdb.get_status(ev.real_group_id,'卡哇伊')
-    if not status:
-        return
+async def send_msg(bot, ev, tag):
     image_data = await get_pic(ev)
-    if len(image_data.getvalue()) >= 1024 * 1024:
-        await bot.send(ev, "传入图片过大，可能无法输出结果")
     image = Image.open(image_data)
     frames = []
     durations = []
@@ -67,11 +76,11 @@ async def kawaii(bot, ev):
         for frame in range(image.n_frames):
             image.seek(frame)
             frame_image = image.copy()
-            frame_image = process_frame(frame_image)
+            frame_image = process_frame(frame_image,tag)
             frames.append(frame_image)
             durations.append(image.info['duration'] if 'duration' in image.info else 100)
     else:
-        processed_image = process_frame(image)
+        processed_image = process_frame(image,tag)
         frames.append(processed_image)
 
     output_image = BytesIO()
@@ -84,6 +93,12 @@ async def kawaii(bot, ev):
     msg = f'[CQ:image,file={base64_str}]'
     await bot.send(ev, msg)
 
+@sv.on_prefix("卡哇伊")
+@check_status('卡哇伊')
+async def kawaii(bot, ev):
+    await send_msg(bot, ev, 'kawaii')
 
-
-
+@sv.on_prefix("喜欢甜食?")
+@check_status('卡哇伊')
+async def amai(bot, ev):
+    await send_msg(bot, ev, 'amai')
