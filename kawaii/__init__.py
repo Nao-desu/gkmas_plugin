@@ -20,6 +20,7 @@ async def get_pic(ev):
 
 path = os.path.dirname(__file__)
 
+#(长,宽,边距)
 size = {
     'kawaii':{
         1: (675, 900, 43),
@@ -28,6 +29,10 @@ size = {
     'amai':{
         1: (506, 900, 16),
         2: (900, 506, 16)
+    },
+    'shuki':{
+        1: (540, 960, 21),
+        2: (960, 540, 21)
     }
 }
 
@@ -102,3 +107,8 @@ async def kawaii(bot, ev):
 @check_status('卡哇伊')
 async def amai(bot, ev):
     await send_msg(bot, ev, 'amai')
+    
+@sv.on_prefix("shuki")
+@check_status('卡哇伊')
+async def shuki(bot, ev):
+    await send_msg(bot, ev, 'kawaii')
