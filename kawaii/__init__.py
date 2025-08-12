@@ -111,4 +111,4 @@ async def amai(bot, ev):
 @sv.on_prefix("shuki")
 @check_status('卡哇伊')
 async def shuki(bot, ev):
-    await send_msg(bot, ev, 'kawaii')
+    await send_msg(bot, ev, 'shuki')
